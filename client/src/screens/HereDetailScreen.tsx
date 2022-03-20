@@ -5,6 +5,7 @@ const HereDetailScreen = () => {
   const { name, creater, member } = gymInformation;
   return (
     <div className="mx-auto">
+      <div>detail screen</div>
       <Center
         w="100%"
         h="40"

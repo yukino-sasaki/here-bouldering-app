@@ -49,6 +49,7 @@ const HomeScreen = () => {
                   borderRadius="md"
                   boxShadow="md"
                   onClick={navigatePage}
+                  key={i}
                 >
                   <Center w="100%" bg="blue.500" h="20" borderTopRadius="md">
                     <div className="text-white text-2xl">{name}</div>
