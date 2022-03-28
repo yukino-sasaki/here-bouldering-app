@@ -1,0 +1,87 @@
+type User {
+  userId: ID
+  nickname: String
+  avatarImage: String
+  startClimbingTime: String
+  finishClimbingTime: String
+}
+
+type Gym {
+  gymId: ID
+  name: String
+  place: String
+  creater: User
+  climbingUser: [User]
+}
+
+type Me {
+  nickname: String
+  avatarImage: String
+  startClimbingTime: String
+  finishClimbingTime: String
+  registerGyms: [Gym]
+}
+
+type Gyms {
+  gyms: [Gym]
+}
+
+type Query {
+  user(userId: ID): User
+  me: Me
+  gym(gymId: ID): Gym
+  gyms: [Gym]
+}
+
+type RegisterGymResponse {
+  success: Boolean!
+  message: String
+  registerGyms: [Gym]
+}
+
+type RemoveGymResponse {
+  success: Boolean!
+  message: String
+  registerGyms: [Gym]
+}
+
+type EditMeResponse {
+  success: Boolean!
+  message: String
+  me: Me
+}
+
+type AddClimbingUserResponse {
+  success: Boolean!
+  message: String
+  # 難しかったらUserを返すなどする
+  climbingUser: [User]
+}
+
+type RemoveClimbingUserResponse {
+  success: Boolean!
+  message: String
+  # 難しかったらUserを返すなどする
+  climbingUser: [User]
+}
+
+type ResetClimbingUserResponse {
+  success: Boolean!
+  message: String
+  climbingUser: [User]
+}
+
+input CreateUserInput {
+  userId: ID!
+  name: String!
+  avatarImage: String!
+}
+
+type Mutation {
+  createUser(input: CreateUserInput!): User
+  registerGym: RegisterGymResponse
+  removeGym: RemoveGymResponse
+  editMe: EditMeResponse
+  addClimbingUser(userId: ID!): AddClimbingUserResponse
+  removeClimbingUser(userId: ID!): RemoveClimbingUserResponse
+}
