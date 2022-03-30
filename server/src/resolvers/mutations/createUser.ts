@@ -1,4 +1,5 @@
 import { MutationResolvers } from "../../generated/graphql";
+import User from "../../models/user";
 
 export const createUser: MutationResolvers["createUser"] = (_, { input }) => {
   const newUser = {
@@ -9,5 +10,12 @@ export const createUser: MutationResolvers["createUser"] = (_, { input }) => {
     startClimbingTime: "00:00",
     finishClimbingTime: "00:00",
   };
-  return newUser;
+  const user = new User({
+    userId: "gaeroigno23",
+    nickname: input?.name,
+    avatarImage: input?.avatarImage,
+    startClimbingTime: "00:00",
+    finishClimbingTime: "00:00",
+  }).save();
+  return user;
 };
