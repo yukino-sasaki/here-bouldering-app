@@ -38,9 +38,9 @@ export type Gym = {
   __typename?: 'Gym';
   climbingUser?: Maybe<Array<Maybe<User>>>;
   creater?: Maybe<User>;
-  gymId?: Maybe<Scalars['ID']>;
-  name?: Maybe<Scalars['String']>;
-  place?: Maybe<Scalars['String']>;
+  gymId: Scalars['ID'];
+  name: Scalars['String'];
+  place: Scalars['String'];
 };
 
 export type Gyms = {
@@ -50,12 +50,12 @@ export type Gyms = {
 
 export type Me = {
   __typename?: 'Me';
-  avatarImage?: Maybe<Scalars['String']>;
+  avatarImage: Scalars['String'];
   finishClimbingTime?: Maybe<Scalars['String']>;
-  nickname?: Maybe<Scalars['String']>;
+  nickname: Scalars['String'];
   registerGyms?: Maybe<Array<Maybe<Gym>>>;
   startClimbingTime?: Maybe<Scalars['String']>;
-  userId?: Maybe<Scalars['String']>;
+  userId: Scalars['String'];
 };
 
 export type Mutation = {
@@ -153,13 +153,13 @@ export type Test = {
 
 export type User = {
   __typename?: 'User';
-  avatarImage?: Maybe<Scalars['String']>;
+  avatarImage: Scalars['String'];
   email?: Maybe<Scalars['String']>;
   finishClimbingTime?: Maybe<Scalars['String']>;
-  nickname?: Maybe<Scalars['String']>;
-  registerGym?: Maybe<Gym>;
+  nickname: Scalars['String'];
+  registerGyms?: Maybe<Array<Maybe<Gym>>>;
   startClimbingTime?: Maybe<Scalars['String']>;
-  userId?: Maybe<Scalars['ID']>;
+  userId: Scalars['ID'];
 };
 
 export type CreateUserMutationVariables = Exact<{
@@ -168,12 +168,12 @@ export type CreateUserMutationVariables = Exact<{
 }>;
 
 
-export type CreateUserMutation = { __typename?: 'Mutation', createUser?: { __typename?: 'User', userId?: string | null, nickname?: string | null, avatarImage?: string | null, startClimbingTime?: string | null, finishClimbingTime?: string | null } | null };
+export type CreateUserMutation = { __typename?: 'Mutation', createUser?: { __typename?: 'User', userId: string, nickname: string, avatarImage: string, startClimbingTime?: string | null, finishClimbingTime?: string | null } | null };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'Me', userId?: string | null, avatarImage?: string | null, nickname?: string | null, finishClimbingTime?: string | null, startClimbingTime?: string | null, registerGyms?: Array<{ __typename?: 'Gym', name?: string | null } | null> | null } | null };
+export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'Me', userId: string, avatarImage: string, nickname: string, finishClimbingTime?: string | null, startClimbingTime?: string | null, registerGyms?: Array<{ __typename?: 'Gym', name: string } | null> | null } | null };
 
 
 export const CreateUserDocument = gql`

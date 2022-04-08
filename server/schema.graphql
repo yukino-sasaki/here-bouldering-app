@@ -1,7 +1,7 @@
 type User {
-  userId: ID
-  nickname: String
-  avatarImage: String
+  userId: ID!
+  nickname: String!
+  avatarImage: String!
   startClimbingTime: String
   finishClimbingTime: String
   email: String
@@ -9,17 +9,17 @@ type User {
 }
 
 type Gym {
-  gymId: ID
-  name: String
-  place: String
+  gymId: ID!
+  name: String!
+  place: String!
   creater: User
   climbingUser: [User]
 }
 
 type Me {
-  userId: String
-  nickname: String
-  avatarImage: String
+  userId: String!
+  nickname: String!
+  avatarImage: String!
   startClimbingTime: String
   finishClimbingTime: String
   registerGyms: [Gym]

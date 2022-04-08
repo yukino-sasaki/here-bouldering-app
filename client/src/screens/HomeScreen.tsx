@@ -1,4 +1,5 @@
 import {
+  Avatar,
   Button,
   Center,
   FormControl,
@@ -6,6 +7,7 @@ import {
   Grid,
   GridItem,
   Input,
+  Text,
   useDisclosure,
 } from "@chakra-ui/react";
 import "focus-visible/dist/focus-visible";
@@ -18,6 +20,7 @@ const HomeScreen = () => {
   const navigate = useNavigate();
 
   const { data } = useMeQuery();
+  const me = data?.me;
 
   const createGym = useDisclosure();
   const userSetting = useDisclosure();
@@ -26,11 +29,27 @@ const HomeScreen = () => {
     // wish to navigate each id. it's tentative
     navigate("/detail");
   };
-
+  if (!me)
+    return (
+      <div>
+        情報を取得できませんでした。お手数ですが、再読み込みかもう一度サインインをし直してください
+      </div>
+    );
+  const { avatarImage, nickname } = me;
   return (
     <>
-      <div className="bg-darkgray flex-col justify-center h-16 flex">
-        <h2 className="text-3xl text-white text-center">Here!Bouldering!</h2>
+      <div className="bg-darkgray flex-col justify-between h-16 flex">
+        <div className="flex flex-row justify-between px-8">
+          <h2 className="text-3xl text-white h-9 my-auto">Here!Bouldering!</h2>
+          <div className="w-28">
+            <div className="flex flex-row justify-center">
+              <Avatar bg={avatarImage} size="sm" />
+            </div>
+            <Text color="white" fontSize="sm" align="center">
+              {nickname}
+            </Text>
+          </div>
+        </div>
       </div>
       <div className="flex h-full">
         <div className="bg-gray w-1/5 h-screen">
