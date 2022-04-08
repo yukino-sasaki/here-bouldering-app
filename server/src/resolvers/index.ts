@@ -1,9 +1,11 @@
 import { createUser } from "./mutations/createUser";
-import { gym } from "./queries/gym";
+import { me } from "./queries/me";
+import { user } from "./queries/user";
 
 export const resolvers = {
   Query: {
-    gym,
+    me,
+    user,
   },
   Mutation: {
     createUser,

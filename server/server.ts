@@ -5,7 +5,15 @@ import express from "express";
 import { importSchema } from "graphql-import";
 import http from "http";
 import mongoose from "mongoose";
+import { authorization } from "./firebase";
 import { resolvers } from "./src/resolvers";
+
+export type Context = {
+  id: string;
+  email?: string;
+};
+
+// type ContextFunction = (ctx: ExpressContext) => Promise<Context>;
 
 dotenv.config();
 console.log(process.env.DATABASE);
@@ -36,6 +44,23 @@ const schema = makeExecutableSchema({
 
 const apolloServer = new ApolloServer({
   schema,
+  context: async ({ req }): Promise<Context | null> => {
+    const idToken = req.headers.authorization?.replace(/^Bearer /, "");
+    if (!idToken) {
+      throw new Error(`auth token is falsy. auth is ${req.headers}`);
+    }
+
+    try {
+      const decoded = await authorization.verifyIdToken(idToken);
+      console.log("id", decoded.uid, "email", decoded.email);
+      return {
+        id: decoded.uid,
+        email: decoded.email,
+      };
+    } catch (err) {
+      return null;
+    }
+  },
 });
 const startServer = async () => {
   await apolloServer.start();

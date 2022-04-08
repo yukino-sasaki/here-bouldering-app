@@ -1,0 +1,12 @@
+query Me {
+  me {
+    userId
+    avatarImage
+    nickname
+    finishClimbingTime
+    startClimbingTime
+    registerGyms {
+      name
+    }
+  }
+}

@@ -1,35 +1,31 @@
 type User {
-  userId: ID
-  nickname: String
-  avatarImage: String
+  userId: ID!
+  nickname: String!
+  avatarImage: String!
   startClimbingTime: String
   finishClimbingTime: String
+  email: String
+  registerGyms: [Gym]
 }
 
 type Gym {
-  gymId: ID
-  name: String
-  place: String
+  gymId: ID!
+  name: String!
+  place: String!
   creater: User
   climbingUser: [User]
 }
 
 type Me {
-  nickname: String
-  avatarImage: String
+  userId: String!
+  nickname: String!
+  avatarImage: String!
   startClimbingTime: String
   finishClimbingTime: String
   registerGyms: [Gym]
 }
 
 type Gyms {
-  gyms: [Gym]
-}
-
-type Query {
-  user(userId: ID): User
-  me: Me
-  gym(gymId: ID): Gym
   gyms: [Gym]
 }
 
@@ -71,16 +67,29 @@ type ResetClimbingUserResponse {
   climbingUser: [User]
 }
 
+type Test {
+  text: String
+  context: String
+}
+
 input CreateUserInput {
-  userId: ID!
-  name: String!
+  nickname: String!
   avatarImage: String!
 }
 
+type Query {
+  user(userId: ID): User
+  me: Me
+  gym(gymId: ID): Gym
+  gyms: [Gym]
+}
+
 type Mutation {
-  createUser(input: CreateUserInput!): User
+  createUser(nickname: String!, avatarImage: String!): User
   registerGym: RegisterGymResponse
   removeGym: RemoveGymResponse
+  test(text: String, context: String): Test
+  addGyms(name: String, creater: String, place: String): Gym
   editMe: EditMeResponse
   addClimbingUser(userId: ID!): AddClimbingUserResponse
   removeClimbingUser(userId: ID!): RemoveClimbingUserResponse

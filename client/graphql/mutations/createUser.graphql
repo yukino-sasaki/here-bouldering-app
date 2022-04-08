@@ -1,0 +1,9 @@
+mutation CreateUser($nickname: String!, $avatarImage: String!) {
+  createUser(nickname: $nickname, avatarImage: $avatarImage) {
+    userId
+    nickname
+    avatarImage
+    startClimbingTime
+    finishClimbingTime
+  }
+}

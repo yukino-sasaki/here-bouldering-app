@@ -1,6 +1,8 @@
 overwrite: true
 schema: "./schema.graphql"
 documents: null
+config:
+  contextType: "./src/context#Context"
 generates:
   "./src/generated/graphql.ts":
     plugins:

@@ -1,4 +1,4 @@
-export const me = {
+export const meRes = {
   userId: "1234567890",
   nickname: "yukis",
   avatarImage: "https://via.placeholder.com/250",

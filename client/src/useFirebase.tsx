@@ -13,11 +13,18 @@ import { auth } from "./firebase";
 
 const useFirebase = () => {
   const provider = new GoogleAuthProvider();
-  const navigate = useNavigate();
 
-  const navigateHome = () => {
+  const navigate = useNavigate();
+  const [userData, setUserData] = useState<User | null>();
+
+  const navigateUserScreen = () => {
     // wish to navigate each id. it's tentative
-    navigate("/");
+    navigate("/user", { state: { userData } });
+  };
+
+  const navigateHomeScreen = () => {
+    // wish to navigate each id. it's tentative
+    navigate("/", { state: { userData } });
   };
 
   const handleSignIn = async () => {
@@ -27,9 +34,8 @@ const useFirebase = () => {
         const credential = GoogleAuthProvider.credentialFromResult(result);
         const token = credential && credential.accessToken;
         // The signed-in user info.
-        const user = result.user;
-        console.log(user);
-        navigateHome();
+        const userResponse = result.user;
+        navigate("/user", { state: { user: userResponse } });
         // ...
       })
       .catch((error) => {
@@ -43,10 +49,8 @@ const useFirebase = () => {
       });
   };
 
-  const [user, setUser] = useState<User | null>();
-
   onAuthStateChanged(auth, (currentUser) => {
-    setUser(currentUser);
+    setUserData(currentUser);
   });
 
   const registerUser = async (
@@ -54,25 +58,35 @@ const useFirebase = () => {
     registerPassword: string
   ) => {
     try {
-      const user = await createUserWithEmailAndPassword(
+      await createUserWithEmailAndPassword(
         auth,
         registerEmail,
         registerPassword
-      );
-      console.log(user);
+      ).then((userCredential) => {
+        const userResponse = userCredential.user;
+        const { email, uid } = userResponse;
+        setUserData(userResponse);
+        navigate("/user", { state: { user: { email, uid } } });
+      });
     } catch (error) {
       console.log(error);
     }
+    navigate("/user", { state: { user: userData } });
   };
 
   const login = async (loginEmail: string, loginPassword: string) => {
     try {
-      const user = await signInWithEmailAndPassword(
-        auth,
-        loginEmail,
-        loginPassword
+      await signInWithEmailAndPassword(auth, loginEmail, loginPassword).then(
+        (userCredential) => {
+          // Signed in
+          const userResponse = userCredential.user;
+
+          const { email, uid } = userResponse;
+          setUserData(userResponse);
+          navigate("/user", { state: { user: { email, uid } } });
+          navigateHomeScreen();
+        }
       );
-      console.log(user);
     } catch (error) {
       console.log(error);
     }
