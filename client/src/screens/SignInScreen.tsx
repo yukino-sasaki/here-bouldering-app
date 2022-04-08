@@ -8,6 +8,7 @@ type FormData = {
 };
 
 const SignInScreen = () => {
+  // TODO: google login is not practiced. it's not function
   const { registerUser, handleSignIn } = useFirebase();
 
   const {
@@ -17,7 +18,6 @@ const SignInScreen = () => {
   } = useForm<FormData>();
 
   const onSubmit = (value: { email: string; password: string }) => {
-    console.log(value);
     const { email, password } = value;
     registerUser(email, password);
   };

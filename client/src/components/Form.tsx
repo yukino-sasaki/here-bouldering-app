@@ -1,33 +1,30 @@
 import { Input } from "@chakra-ui/react";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { Path, useForm } from "react-hook-form";
 
-type CreateForm = {
-  name: string;
-  place: string;
-};
+type Props = { placeholder?: string; name: string };
 
-export const Form = () => {
-  const {
-    handleSubmit,
-    register,
-    formState: { errors, isSubmitting },
-  } = useForm<CreateForm>();
+export function Form<T>(props: Props) {
+  const { name, placeholder } = props;
+  const { register } = useForm<T>();
 
-  const onSubmit: SubmitHandler<CreateForm> = (data) => console.log(data);
+  // const {
+  //   handleSubmit,
+  //   register,
+  //   formState: { errors, isSubmitting },
+  // } = useForm<CreateForm>();
+
+  // const onSubmit: SubmitHandler<CreateForm> = (data) => console.log(data);
   return (
-    <>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Input
-          placeholder="name"
-          {...register("name", {
-            required: "This is required",
-            minLength: { value: 4, message: "Minimum length should be 4" },
-          })}
-        />
-      </form>
-    </>
+    <Input
+      id={name}
+      placeholder={placeholder}
+      {...register(name as Path<T>, {
+        required: "This is required",
+        minLength: { value: 4, message: "Minimum length should be 4" },
+      })}
+    />
   );
-};
+}
 
 // import {
 //   Button,

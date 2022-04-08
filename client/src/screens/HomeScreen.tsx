@@ -12,9 +12,12 @@ import "focus-visible/dist/focus-visible";
 import { useNavigate } from "react-router-dom";
 import { Modal } from "../components/Modal";
 import { gym } from "../dummy";
+import { useMeQuery } from "../generated/graphql";
 
 const HomeScreen = () => {
   const navigate = useNavigate();
+
+  const { data } = useMeQuery();
 
   const createGym = useDisclosure();
   const userSetting = useDisclosure();
