@@ -19,6 +19,7 @@ const SignInScreen = () => {
 
   const onSubmit = (value: { email: string; password: string }) => {
     const { email, password } = value;
+    console.log(email, password);
     registerUser(email, password);
   };
 

@@ -1,0 +1,12 @@
+query Gyms {
+  gyms {
+    creater {
+      userId
+      nickname
+      avatarImage
+    }
+    gymId
+    name
+    place
+  }
+}

@@ -10,6 +10,7 @@ import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 import { auth } from "./firebase";
+import GymsListScreen from "./screens/GymsListScreen";
 import HereDetailScreen from "./screens/HereDetailScreen";
 import HomeScreen from "./screens/HomeScreen";
 import LogInScreen from "./screens/LoginScreen";
@@ -62,6 +63,7 @@ function App() {
             <Route path="/logIn" element={<LogInScreen />} />
             <Route path="/detail" element={<HereDetailScreen />} />
             <Route path="/user" element={<UserScreen />} />
+            <Route path="/gymsList" element={<GymsListScreen />} />
           </Routes>
         </BrowserRouter>
       </ChakraProvider>

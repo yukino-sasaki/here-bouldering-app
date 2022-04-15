@@ -81,9 +81,9 @@ const useFirebase = () => {
           // Signed in
           const userResponse = userCredential.user;
 
-          const { email, uid } = userResponse;
+          // const { email, uid } = userResponse;
           setUserData(userResponse);
-          navigate("/user", { state: { user: { email, uid } } });
+          // navigate("/user", { state: { user: { email, uid } } });
           navigateHomeScreen();
         }
       );
