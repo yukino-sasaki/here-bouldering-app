@@ -48,7 +48,10 @@ const UserScreen = () => {
     const { nickname } = data;
 
     try {
-      if (!selectAvatarImage) return;
+      if (!selectAvatarImage) {
+        throw new Error("アイコンを選択してください");
+      }
+      console.log(nickname, selectAvatarImage);
       const response = await createUserMutation({
         variables: {
           nickname,
@@ -99,7 +102,6 @@ const UserScreen = () => {
               minLength: { value: 4, message: "Minimum length should be 4" },
             })}
           />
-          {/* <Input mt="20%" /> */}
           <Button type="submit" isLoading={isSubmitting}>
             ユーザーを作成する
           </Button>

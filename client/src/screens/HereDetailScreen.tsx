@@ -1,11 +1,15 @@
-import { Box, Center, Divider } from "@chakra-ui/react";
-import { gymInformation } from "../dummy";
+import { Center } from "@chakra-ui/react";
+import { useLocation } from "react-router-dom";
+import { useGymQuery } from "../generated/graphql";
 
 const HereDetailScreen = () => {
-  const { name, creater, member } = gymInformation;
+  const location = useLocation();
+  const { gymId } = location.state as { gymId: string };
+
+  const { data } = useGymQuery({ variables: { gymId } });
+  console.log(data);
   return (
     <div className="mx-auto">
-      <div>detail screen</div>
       <Center
         w="100%"
         h="40"
@@ -15,16 +19,8 @@ const HereDetailScreen = () => {
         bg="blue.500"
         maxW="lg"
       >
-        {name}
+        <div>detail screen</div>
       </Center>
-      {member.map((member, index) => {
-        return (
-          <>
-            <Box>{member}</Box>
-            <Divider />
-          </>
-        );
-      })}
     </div>
   );
 };

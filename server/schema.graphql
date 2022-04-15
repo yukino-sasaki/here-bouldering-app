@@ -5,14 +5,20 @@ type User {
   startClimbingTime: String
   finishClimbingTime: String
   email: String
-  registerGyms: [Gym]
+  registerGyms: [GymInfo]
+}
+
+type Creater {
+  userId: ID!
+  nickname: String!
+  avatarImage: String
 }
 
 type Gym {
   gymId: ID!
   name: String!
   place: String!
-  creater: User
+  creater: Creater!
   climbingUser: [User]
 }
 
@@ -22,7 +28,7 @@ type Me {
   avatarImage: String!
   startClimbingTime: String
   finishClimbingTime: String
-  registerGyms: [Gym]
+  registerGyms: [GymInfo!]!
 }
 
 type Gyms {
@@ -50,7 +56,6 @@ type EditMeResponse {
 type AddClimbingUserResponse {
   success: Boolean!
   message: String
-  # 難しかったらUserを返すなどする
   climbingUser: [User]
 }
 
@@ -72,24 +77,43 @@ type Test {
   context: String
 }
 
-input CreateUserInput {
+type GymInfo {
+  gymId: ID!
+  name: String!
+  place: String!
+}
+
+type MeResponse {
+  me: User
+  statusMessage: String
+  success: Boolean
+}
+
+input CreaterInput {
+  userId: String!
   nickname: String!
   avatarImage: String!
+}
+
+input GymInput {
+  gymId: ID!
+  name: String!
+  place: String!
 }
 
 type Query {
   user(userId: ID): User
   me: Me
   gym(gymId: ID): Gym
-  gyms: [Gym]
+  gyms: [Gym!]!
 }
 
 type Mutation {
-  createUser(nickname: String!, avatarImage: String!): User
-  registerGym: RegisterGymResponse
+  createUser(nickname: String!, avatarImage: String!): User!
+  registerGym(GymInput: GymInput): MeResponse
   removeGym: RemoveGymResponse
   test(text: String, context: String): Test
-  addGyms(name: String, creater: String, place: String): Gym
+  addGyms(name: String!, place: String!, CreaterInput: CreaterInput!): Gym
   editMe: EditMeResponse
   addClimbingUser(userId: ID!): AddClimbingUserResponse
   removeClimbingUser(userId: ID!): RemoveClimbingUserResponse

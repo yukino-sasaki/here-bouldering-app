@@ -13,7 +13,7 @@ export const createUser: MutationResolvers["createUser"] = async (
     email,
     startClimbingTime: "00:00",
     finishClimbingTime: "00:00",
-    registerGym: [],
+    registerGyms: [],
   }).save();
   console.log("USER", user);
   return user;
