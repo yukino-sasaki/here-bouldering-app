@@ -1,8 +1,14 @@
-import { Box, Center, Divider } from "@chakra-ui/react";
-import { gymInformation } from "../dummy";
+import { Center, Divider } from "@chakra-ui/react";
+import { useLocation } from "react-router-dom";
+import { useGymQuery } from "../generated/graphql";
 
 const HereDetailScreen = () => {
-  const { name, creater, member } = gymInformation;
+  const location = useLocation();
+  const { gymId } = location.state as { gymId: string };
+
+  const GymQueryResponse = useGymQuery({ variables: { gymId } });
+  const gym = GymQueryResponse.data?.gym;
+
   return (
     <div className="mx-auto">
       <div>detail screen</div>
@@ -12,10 +18,14 @@ const HereDetailScreen = () => {
         borderWidth="1px"
         borderRadius="lg"
         color="white"
-        bg="blue.500"
         maxW="lg"
       >
+<<<<<<< Updated upstream
         {name}
+=======
+        <div>detail screen</div>
+        <Divider />
+>>>>>>> Stashed changes
       </Center>
       {member.map((member, index) => {
         return (

@@ -2,10 +2,10 @@ import {
   ApolloClient,
   ApolloProvider,
   createHttpLink,
-  InMemoryCache,
+  InMemoryCache
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
-import { ChakraProvider } from "@chakra-ui/react";
+import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
@@ -15,6 +15,12 @@ import HomeScreen from "./screens/HomeScreen";
 import LogInScreen from "./screens/LoginScreen";
 import SignInScreen from "./screens/SignInScreen";
 import UserScreen from "./screens/UserScreen";
+
+// 2. Call `extendTheme` and pass your custom values
+const theme = extendTheme({
+  colors: {
+    
+})
 
 const initFirebaseAuth = () => {
   return new Promise((resolve) => {
