@@ -2,7 +2,7 @@ import {
   ApolloClient,
   ApolloProvider,
   createHttpLink,
-  InMemoryCache
+  InMemoryCache,
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
@@ -10,6 +10,7 @@ import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 import { auth } from "./firebase";
+import GymsListScreen from "./screens/GymsListScreen";
 import HereDetailScreen from "./screens/HereDetailScreen";
 import HomeScreen from "./screens/HomeScreen";
 import LogInScreen from "./screens/LoginScreen";
@@ -19,8 +20,13 @@ import UserScreen from "./screens/UserScreen";
 // 2. Call `extendTheme` and pass your custom values
 const theme = extendTheme({
   colors: {
-    
-})
+    background: "#F0F0F2",
+    whitegray: "#D7D7D9",
+    ligntgray: "#A6A6A6",
+    gray: "#585859",
+    darkgray: "#3F3F40",
+  },
+});
 
 const initFirebaseAuth = () => {
   return new Promise((resolve) => {
@@ -60,7 +66,7 @@ const client = new ApolloClient({
 function App() {
   return (
     <ApolloProvider client={client}>
-      <ChakraProvider>
+      <ChakraProvider theme={theme}>
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<HomeScreen />} />
@@ -68,6 +74,7 @@ function App() {
             <Route path="/logIn" element={<LogInScreen />} />
             <Route path="/detail" element={<HereDetailScreen />} />
             <Route path="/user" element={<UserScreen />} />
+            <Route path="/gymsList" element={<GymsListScreen />} />
           </Routes>
         </BrowserRouter>
       </ChakraProvider>

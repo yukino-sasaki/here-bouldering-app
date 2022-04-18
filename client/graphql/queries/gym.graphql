@@ -1,0 +1,18 @@
+query Gym($gymId: ID) {
+  gym(gymId: $gymId) {
+    gymId
+    name
+    place
+    creater {
+      nickname
+      avatarImage
+    }
+    climbingUser {
+      userId
+      nickname
+      avatarImage
+      finishClimbingTime
+      startClimbingTime
+    }
+  }
+}

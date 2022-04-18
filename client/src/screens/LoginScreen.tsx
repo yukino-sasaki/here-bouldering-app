@@ -22,7 +22,6 @@ const LogInScreen = () => {
   };
   return (
     <>
-      <div>sign in</div>
       <Button onClick={handleSignIn}>googleでログインする</Button>
       <Button>メールアドレスでログインする</Button>
       <form onSubmit={handleSubmit(onSubmit)}>
