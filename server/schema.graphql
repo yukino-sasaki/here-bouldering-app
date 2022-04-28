@@ -2,10 +2,25 @@ type User {
   userId: ID!
   nickname: String!
   avatarImage: String!
-  startClimbingTime: String
-  finishClimbingTime: String
+  climbingTime: [ClimbingTime]
   email: String
   registerGyms: [GymInfo]
+}
+
+type ClimbingUser {
+  userId: ID!
+  nickname: String!
+  avatarImage: String!
+  startClimbingTime: String
+  finishClimbingTime: String
+  registerGyms: [GymInfo]
+}
+
+type ClimbingTime {
+  gymId: ID
+  name: String!
+  startClimbingTime: String
+  finishClimbingTime: String
 }
 
 type Creater {
@@ -19,15 +34,14 @@ type Gym {
   name: String!
   place: String!
   creater: Creater!
-  climbingUser: [User]
+  climbingUser: [ClimbingUser]
 }
 
 type Me {
   userId: String!
   nickname: String!
   avatarImage: String!
-  startClimbingTime: String
-  finishClimbingTime: String
+  climbingTime: [ClimbingTime]
   registerGyms: [GymInfo!]!
 }
 
@@ -35,46 +49,32 @@ type Gyms {
   gyms: [Gym]
 }
 
+enum MutateStatus {
+  success
+  warning
+  error
+}
+
 type RegisterGymResponse {
-  success: Boolean!
+  status: MutateStatus!
   message: String
   registerGyms: [Gym]
 }
 
 type RemoveGymResponse {
-  success: Boolean!
+  status: MutateStatus!
   message: String
-  registerGyms: [Gym]
 }
 
-type EditMeResponse {
-  success: Boolean!
-  message: String
-  me: Me
-}
-
-type AddClimbingUserResponse {
-  success: Boolean!
-  message: String
-  climbingUser: [User]
-}
-
-type RemoveClimbingUserResponse {
-  success: Boolean!
-  message: String
-  # 難しかったらUserを返すなどする
-  climbingUser: [User]
+type ClimbingUserResponse {
+  status: MutateStatus!
+  message: String!
+  gym: Gym
 }
 
 type ResetClimbingUserResponse {
-  success: Boolean!
+  status: MutateStatus!
   message: String
-  climbingUser: [User]
-}
-
-type Test {
-  text: String
-  context: String
 }
 
 type GymInfo {
@@ -85,8 +85,8 @@ type GymInfo {
 
 type MeResponse {
   me: User
-  statusMessage: String
-  success: Boolean
+  message: String
+  status: MutateStatus!
 }
 
 input CreaterInput {
@@ -95,10 +95,30 @@ input CreaterInput {
   avatarImage: String!
 }
 
+input RegisterClimbingUserInput {
+  gymId: ID!
+  userId: ID!
+  nickname: String!
+  avatarImage: String!
+  finishClimbingTime: String!
+  startClimbingTime: String!
+}
+
 input GymInput {
   gymId: ID!
   name: String!
   place: String!
+}
+
+input UserInput {
+  nickname: String!
+  avatarImage: String!
+}
+
+input EditClimbingTimeInput {
+  gymId: ID
+  startClimbingTime: String
+  finishClimbingTime: String
 }
 
 type Query {
@@ -110,11 +130,13 @@ type Query {
 
 type Mutation {
   createUser(nickname: String!, avatarImage: String!): User!
-  registerGym(GymInput: GymInput): MeResponse
-  removeGym: RemoveGymResponse
-  test(text: String, context: String): Test
-  addGyms(name: String!, place: String!, CreaterInput: CreaterInput!): Gym
-  editMe: EditMeResponse
-  addClimbingUser(userId: ID!): AddClimbingUserResponse
-  removeClimbingUser(userId: ID!): RemoveClimbingUserResponse
+  registerGym(GymInput: GymInput): MeResponse # すでに存在しているジムをダッシュボードに登録する
+  unregisterGym(gymId: ID!): MeResponse
+  addGyms(name: String!, place: String!, CreaterInput: CreaterInput!): Gym # ジムを新たに作成する
+  removeGym(gymId: ID!): RemoveGymResponse
+  editMe(input: UserInput!): MeResponse
+  addClimbingUser(input: RegisterClimbingUserInput!): ClimbingUserResponse
+  editClimbingUser(input: EditClimbingTimeInput): ClimbingUserResponse
+  removeClimbingUser(gymId: ID!): ClimbingUserResponse # ジムに登っているユーザーをユーザーが削除できるようにする
+  resetClimbingUser: ResetClimbingUserResponse
 }

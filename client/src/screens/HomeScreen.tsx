@@ -2,19 +2,31 @@ import {
   Avatar,
   Button,
   Center,
+  Flex,
   FormControl,
   FormLabel,
   Grid,
   GridItem,
   Input,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Spacer,
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
 import "focus-visible/dist/focus-visible";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { BsThreeDotsVertical } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 import { Modal } from "../components/Modal";
-import { useAddGymsMutation, useMeQuery } from "../generated/graphql";
+import {
+  MeDocument,
+  useAddGymsMutation,
+  useMeQuery,
+  useUnregisterGymMutation,
+} from "../generated/graphql";
 
 type AddGymsInput = {
   name: string;
@@ -26,6 +38,7 @@ const HomeScreen = () => {
   const { register, handleSubmit } = useForm<AddGymsInput>();
 
   const [addGymsMutation] = useAddGymsMutation();
+  const [unregisterGymMutation] = useUnregisterGymMutation();
   const { data, loading, error } = useMeQuery();
   const me = data?.me;
   console.log(data);
@@ -61,6 +74,18 @@ const HomeScreen = () => {
       console.log(response);
     } catch (error) {
       throw console.log(error);
+    }
+  };
+
+  const onClickUnregisterGym = async (gymId: string) => {
+    try {
+      const response = await unregisterGymMutation({
+        variables: { gymId },
+        refetchQueries: [MeDocument],
+      });
+      console.log(response);
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -101,20 +126,53 @@ const HomeScreen = () => {
               registerGyms.map((registerGym, i) => {
                 if (!registerGym) return <></>;
                 const { name, place, gymId } = registerGym;
-                return (
+                return gymId === "" ? (
                   <GridItem
                     w="100%"
                     h="28"
                     bg="white"
                     borderRadius="md"
                     boxShadow="md"
-                    onClick={() => navigate("/detail", { state: { gymId } })}
                     key={i}
                   >
-                    <Center w="100%" bg="blue.500" h="20" borderTopRadius="md">
+                    <Center w="100%" bg="gray.500" h="20" borderTopRadius="md">
+                      <Text color="whiteAlpha.300">
+                        このジムは作成者によって削除されました
+                      </Text>
+                    </Center>
+                  </GridItem>
+                ) : (
+                  <GridItem
+                    w="100%"
+                    h="28"
+                    bg="white"
+                    borderRadius="md"
+                    boxShadow="md"
+                    key={i}
+                  >
+                    <Center
+                      w="100%"
+                      bg="blue.500"
+                      h="20"
+                      borderTopRadius="md"
+                      onClick={() => navigate("/detail", { state: { gymId } })}
+                    >
                       <div className="text-white text-2xl">{name}</div>
                     </Center>
-                    <div className="px-3 leading-8">{place}</div>
+                    <Flex>
+                      <div className="px-3 leading-8">{place}</div>
+                      <Spacer />
+                      <Menu>
+                        <MenuButton as={Button}>
+                          <BsThreeDotsVertical />
+                        </MenuButton>
+                        <MenuList>
+                          <MenuItem onClick={() => onClickUnregisterGym(gymId)}>
+                            登録を解除
+                          </MenuItem>
+                        </MenuList>
+                      </Menu>
+                    </Flex>
                   </GridItem>
                 );
               })}

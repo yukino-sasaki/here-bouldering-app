@@ -3,8 +3,11 @@ query Me {
     userId
     avatarImage
     nickname
-    finishClimbingTime
-    startClimbingTime
+    climbingTime {
+      gymId
+      finishClimbingTime
+      startClimbingTime
+    }
     registerGyms {
       name
       place

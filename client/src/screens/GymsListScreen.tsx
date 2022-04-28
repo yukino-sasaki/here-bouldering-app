@@ -13,9 +13,15 @@ import { MdPlace } from "react-icons/md";
 import {
   Gym,
   MeDocument,
+  MutateStatus,
   useGymsQuery,
   useRegisterGymMutation,
 } from "../generated/graphql";
+
+type MutationResponse = {
+  status: MutateStatus;
+  message?: string | null;
+};
 
 const GymsListScreen = () => {
   const [registerGymMutation] = useRegisterGymMutation();
@@ -24,6 +30,18 @@ const GymsListScreen = () => {
 
   const toast = useToast();
   console.log(gyms);
+
+  function showToast<T extends MutationResponse>(
+    response?: T | null,
+    title?: string
+  ) {
+    toast({
+      title: title ? title : response?.message,
+      status: response?.status,
+      duration: 5000,
+      isClosable: true,
+    });
+  }
 
   const registerGym = async (gym: Gym) => {
     try {
@@ -56,21 +74,25 @@ const GymsListScreen = () => {
           isClosable: true,
         });
         throw new Error(`${errors}`);
-      } else if (registerGym?.success) {
-        toast({
-          title: "ジムを登録しました",
-          status: "success",
-          duration: 5000,
-          isClosable: true,
-        });
-      } else if (registerGym?.statusMessage) {
-        toast({
-          title: `${registerGym?.statusMessage}`,
-          status: "warning",
-          duration: 5000,
-          isClosable: true,
-        });
+      } else {
+        showToast(registerGym);
       }
+
+      // else if (registerGym?.status === MutateStatus.Success) {
+      //   toast({
+      //     title: "ジムを登録しました",
+      //     status: "success",
+      //     duration: 5000,
+      //     isClosable: true,
+      //   });
+      // } else if (registerGym?.message) {
+      //   toast({
+      //     title: `${registerGym?.message}`,
+      //     status: "warning",
+      //     duration: 5000,
+      //     isClosable: true,
+      //   });
+      // }
     } catch (error) {
       throw new Error(`${error}`);
     }

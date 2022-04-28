@@ -1,4 +1,4 @@
-import { MutationResolvers } from "../../generated/graphql";
+import { MutateStatus, MutationResolvers } from "../../generated/graphql";
 import Gym from "../../models/gyms";
 import User from "../../models/user";
 
@@ -12,7 +12,7 @@ export const registerGym: MutationResolvers["registerGym"] = async (
   if (!existRegisterGyms || !GymInput)
     return {
       me: null,
-      success: false,
+      status: MutateStatus.Error,
     };
   console.log(GymInput);
 
@@ -23,8 +23,8 @@ export const registerGym: MutationResolvers["registerGym"] = async (
   if (findSameGym)
     return {
       me: user,
-      success: false,
-      statusMessage: "すでに同じジムが登録されています！",
+      status: MutateStatus.Warning,
+      message: "すでに同じジムが登録されています！",
     };
 
   const me = await User.findOneAndUpdate(
@@ -53,7 +53,7 @@ export const registerGym: MutationResolvers["registerGym"] = async (
 
   return {
     me,
-    success: true,
-    statusMessage: "成功しました！",
+    status: MutateStatus.Success,
+    message: "成功しました！",
   };
 };
