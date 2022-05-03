@@ -13,7 +13,6 @@ type ClimbingUser {
   avatarImage: String!
   startClimbingTime: String
   finishClimbingTime: String
-  registerGyms: [GymInfo]
 }
 
 type ClimbingTime {
@@ -38,7 +37,7 @@ type Gym {
 }
 
 type Me {
-  userId: String!
+  userId: ID!
   nickname: String!
   avatarImage: String!
   climbingTime: [ClimbingTime]
@@ -58,7 +57,7 @@ enum MutateStatus {
 type RegisterGymResponse {
   status: MutateStatus!
   message: String
-  registerGyms: [Gym]
+  registerGyms: [GymInfo]
 }
 
 type RemoveGymResponse {
@@ -90,13 +89,14 @@ type MeResponse {
 }
 
 input CreaterInput {
-  userId: String!
+  userId: ID!
   nickname: String!
   avatarImage: String!
 }
 
 input RegisterClimbingUserInput {
   gymId: ID!
+  name: String!
   userId: ID!
   nickname: String!
   avatarImage: String!
@@ -122,7 +122,7 @@ input EditClimbingTimeInput {
 }
 
 type Query {
-  user(userId: ID): User
+  user(userId: ID!): User
   me: Me
   gym(gymId: ID): Gym
   gyms: [Gym!]!
@@ -130,8 +130,8 @@ type Query {
 
 type Mutation {
   createUser(nickname: String!, avatarImage: String!): User!
-  registerGym(GymInput: GymInput): MeResponse # すでに存在しているジムをダッシュボードに登録する
-  unregisterGym(gymId: ID!): MeResponse
+  registerGym(GymInput: GymInput): RegisterGymResponse # すでに存在しているジムをダッシュボードに登録する
+  unregisterGym(gymId: ID!): RegisterGymResponse
   addGyms(name: String!, place: String!, CreaterInput: CreaterInput!): Gym # ジムを新たに作成する
   removeGym(gymId: ID!): RemoveGymResponse
   editMe(input: UserInput!): MeResponse

@@ -24,9 +24,12 @@ import { Modal } from "../components/Modal";
 import {
   MeDocument,
   useAddGymsMutation,
+  useEditMeMutation,
   useMeQuery,
+  UserInput,
   useUnregisterGymMutation,
 } from "../generated/graphql";
+import { useShowToast } from "../hooks/useShowToast";
 
 type AddGymsInput = {
   name: string;
@@ -36,12 +39,15 @@ type AddGymsInput = {
 const HomeScreen = () => {
   const navigate = useNavigate();
   const { register, handleSubmit } = useForm<AddGymsInput>();
+  const { register: editMeRegister, handleSubmit: editMeHandleSubmit } =
+    useForm<UserInput>();
 
+  const { showToast } = useShowToast();
   const [addGymsMutation] = useAddGymsMutation();
+  const [editMeMutation] = useEditMeMutation();
   const [unregisterGymMutation] = useUnregisterGymMutation();
   const { data, loading, error } = useMeQuery();
   const me = data?.me;
-  console.log(data);
 
   const createGym = useDisclosure();
   const userSetting = useDisclosure();
@@ -50,7 +56,7 @@ const HomeScreen = () => {
     return (
       <div>
         loading:{loading}, error: {error}
-        情報を取得できませんでした。お手数ですが、再読み込みかもう一度サインインをし直してください
+        情報を取得できませんでした。しばらく待っても画面が表示されない場合、お手数ですが再読み込みかもう一度サインインをし直してください
       </div>
     );
   if (!me) return <div>me is null</div>;
@@ -77,13 +83,29 @@ const HomeScreen = () => {
     }
   };
 
+  const editMeSubmit: SubmitHandler<UserInput> = async (data) => {
+    const { nickname } = data;
+    try {
+      const response = await editMeMutation({
+        variables: {
+          input: { nickname, avatarImage },
+        },
+        refetchQueries: [MeDocument],
+      });
+
+      showToast(response.data?.editMe);
+    } catch (error) {
+      throw console.log(error);
+    }
+  };
+
   const onClickUnregisterGym = async (gymId: string) => {
     try {
       const response = await unregisterGymMutation({
         variables: { gymId },
         refetchQueries: [MeDocument],
       });
-      console.log(response);
+      showToast(response.data?.unregisterGym);
     } catch (error) {
       console.log(error);
     }
@@ -214,12 +236,17 @@ const HomeScreen = () => {
         header={"ユーザー名を変更する"}
         submit="変更する"
         // templary
-        handleSubmit={handleSubmit}
-        onSubmit={addGymsSubmit}
+        handleSubmit={editMeHandleSubmit}
+        onSubmit={editMeSubmit}
       >
         <FormControl>
           <FormLabel>変更後のユーザー名</FormLabel>
-          <Input />
+          <Input
+            id="nickname"
+            {...editMeRegister("nickname", {
+              required: "変更後のニックネームを記入してください。",
+            })}
+          />
         </FormControl>
       </Modal>
     </>

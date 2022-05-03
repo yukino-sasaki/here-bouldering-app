@@ -86,6 +86,7 @@ const HereDetailScreen = () => {
       variables: {
         input: {
           gymId,
+          name,
           finishClimbingTime: finishClimbingTimeInput,
           startClimbingTime: startClimbingTimeInput,
           nickname: me.nickname,
@@ -95,7 +96,6 @@ const HereDetailScreen = () => {
       },
       refetchQueries: [GymDocument],
     });
-    console.log("add climbing user!", response.data);
 
     showToast(response.data?.addClimbingUser);
   };
@@ -134,6 +134,10 @@ const HereDetailScreen = () => {
     } else return null;
   };
 
+  const findMe = gym.climbingUser?.find(
+    (user) => user?.startClimbingTime && user?.userId === me.userId
+  );
+
   return (
     <div className="mx-auto">
       <Box maxW="760px" mx="auto">
@@ -157,7 +161,8 @@ const HereDetailScreen = () => {
         <Divider colorScheme="darkgray" mb="20px" />
         <Text my="20px">登録をしている人</Text>
         {climbingUser?.map((user, index) => {
-          if (!user) return <></>;
+          if (!user || !user?.finishClimbingTime || !user.startClimbingTime)
+            return <></>;
           const {
             nickname,
             avatarImage,
@@ -216,7 +221,7 @@ const HereDetailScreen = () => {
       >
         <Center h="100%">
           <Button colorScheme="blue" onClick={onOpen}>
-            登る！
+            {findMe ? "登る時間帯を変更する" : "登る！"}
           </Button>
         </Center>
       </Box>
@@ -270,6 +275,9 @@ const HereDetailScreen = () => {
               <Button colorScheme="blue" type="submit">
                 この時間帯に登る！
               </Button>
+              {findMe && (
+                <Button colorScheme="red">今日はもう登らない！</Button>
+              )}
             </ModalFooter>
           </form>
         </ModalContent>

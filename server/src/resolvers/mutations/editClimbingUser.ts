@@ -15,29 +15,58 @@ export const editClimbingUser: MutationResolvers["editClimbingUser"] = async (
     };
   const { gymId, finishClimbingTime, startClimbingTime } = input;
 
+  const test = await Gym.findOne(
+    {
+      gymId,
+      // "climbingUser.$.userId": id,
+    }
+    // {
+    //   arrayFilters: [{ "climbingUser.userId": id }],
+    // }
+  );
+
+  console.log("test", test);
+
   const editClimbingUser = await Gym.findOneAndUpdate(
     {
       gymId,
-      climbingUser: { id },
+      climbingUser: {
+        $elemMatch: {
+          userId: id,
+        },
+      },
     },
     {
       $set: {
-        "climbingUser.finishClimbingTime": finishClimbingTime,
-        "climbingUser.startClimbingTime": startClimbingTime,
+        "climbingUser.$.finishClimbingTime": finishClimbingTime,
+        "climbingUser.$.startClimbingTime": startClimbingTime,
       },
     },
-    { new: true }
+    {
+      arrayFilters: [{ "climbingUser.$.userId": id }],
+      new: true,
+    }
   );
+
+  console.log(editClimbingUser);
 
   await User.findOneAndUpdate(
     {
       userId: id,
+      climbingTime: {
+        $elemMatch: {
+          gymId,
+        },
+      },
     },
     {
       $set: {
-        "climbingTime.finishClimbingTime": finishClimbingTime,
-        "climbingUser.startClimbingTime": startClimbingTime,
+        "climbingTime.$.finishClimbingTime": finishClimbingTime,
+        "climbingTime.$.startClimbingTime": startClimbingTime,
       },
+    },
+    {
+      arrayFilters: [{ "climbingTime.$.gymId": gymId }],
     }
   );
 

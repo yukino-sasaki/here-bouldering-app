@@ -28,7 +28,6 @@ export type ClimbingUser = {
   avatarImage: Scalars['String'];
   finishClimbingTime?: Maybe<Scalars['String']>;
   nickname: Scalars['String'];
-  registerGyms?: Maybe<Array<Maybe<GymInfo>>>;
   startClimbingTime?: Maybe<Scalars['String']>;
   userId: Scalars['ID'];
 };
@@ -50,7 +49,7 @@ export type Creater = {
 export type CreaterInput = {
   avatarImage: Scalars['String'];
   nickname: Scalars['String'];
-  userId: Scalars['String'];
+  userId: Scalars['ID'];
 };
 
 export type EditClimbingTimeInput = {
@@ -92,7 +91,7 @@ export type Me = {
   climbingTime?: Maybe<Array<Maybe<ClimbingTime>>>;
   nickname: Scalars['String'];
   registerGyms: Array<GymInfo>;
-  userId: Scalars['String'];
+  userId: Scalars['ID'];
 };
 
 export type MeResponse = {
@@ -115,11 +114,11 @@ export type Mutation = {
   createUser: User;
   editClimbingUser?: Maybe<ClimbingUserResponse>;
   editMe?: Maybe<MeResponse>;
-  registerGym?: Maybe<MeResponse>;
+  registerGym?: Maybe<RegisterGymResponse>;
   removeClimbingUser?: Maybe<ClimbingUserResponse>;
   removeGym?: Maybe<RemoveGymResponse>;
   resetClimbingUser?: Maybe<ResetClimbingUserResponse>;
-  unregisterGym?: Maybe<MeResponse>;
+  unregisterGym?: Maybe<RegisterGymResponse>;
 };
 
 
@@ -185,13 +184,14 @@ export type QueryGymArgs = {
 
 
 export type QueryUserArgs = {
-  userId?: InputMaybe<Scalars['ID']>;
+  userId: Scalars['ID'];
 };
 
 export type RegisterClimbingUserInput = {
   avatarImage: Scalars['String'];
   finishClimbingTime: Scalars['String'];
   gymId: Scalars['ID'];
+  name: Scalars['String'];
   nickname: Scalars['String'];
   startClimbingTime: Scalars['String'];
   userId: Scalars['ID'];
@@ -200,7 +200,7 @@ export type RegisterClimbingUserInput = {
 export type RegisterGymResponse = {
   __typename?: 'RegisterGymResponse';
   message?: Maybe<Scalars['String']>;
-  registerGyms?: Maybe<Array<Maybe<Gym>>>;
+  registerGyms?: Maybe<Array<Maybe<GymInfo>>>;
   status: MutateStatus;
 };
 
@@ -255,12 +255,26 @@ export type CreateUserMutationVariables = Exact<{
 
 export type CreateUserMutation = { __typename?: 'Mutation', createUser: { __typename?: 'User', userId: string, nickname: string, avatarImage: string } };
 
+export type EditClimbingUserMutationVariables = Exact<{
+  input?: InputMaybe<EditClimbingTimeInput>;
+}>;
+
+
+export type EditClimbingUserMutation = { __typename?: 'Mutation', editClimbingUser?: { __typename?: 'ClimbingUserResponse', status: MutateStatus, message: string, gym?: { __typename?: 'Gym', gymId: string, climbingUser?: Array<{ __typename?: 'ClimbingUser', userId: string, avatarImage: string, nickname: string, startClimbingTime?: string | null, finishClimbingTime?: string | null } | null> | null } | null } | null };
+
+export type EditMeMutationVariables = Exact<{
+  input: UserInput;
+}>;
+
+
+export type EditMeMutation = { __typename?: 'Mutation', editMe?: { __typename?: 'MeResponse', status: MutateStatus, message?: string | null, me?: { __typename?: 'User', nickname: string, avatarImage: string } | null } | null };
+
 export type RegisterGymMutationVariables = Exact<{
   GymInput?: InputMaybe<GymInput>;
 }>;
 
 
-export type RegisterGymMutation = { __typename?: 'Mutation', registerGym?: { __typename?: 'MeResponse', message?: string | null, status: MutateStatus, me?: { __typename?: 'User', userId: string, nickname: string, avatarImage: string, email?: string | null, climbingTime?: Array<{ __typename?: 'ClimbingTime', finishClimbingTime?: string | null, startClimbingTime?: string | null } | null> | null, registerGyms?: Array<{ __typename?: 'GymInfo', name: string, place: string, gymId: string } | null> | null } | null } | null };
+export type RegisterGymMutation = { __typename?: 'Mutation', registerGym?: { __typename?: 'RegisterGymResponse', message?: string | null, status: MutateStatus, registerGyms?: Array<{ __typename?: 'GymInfo', name: string, place: string, gymId: string } | null> | null } | null };
 
 export type RemoveGymMutationVariables = Exact<{
   gymId: Scalars['ID'];
@@ -274,7 +288,7 @@ export type UnregisterGymMutationVariables = Exact<{
 }>;
 
 
-export type UnregisterGymMutation = { __typename?: 'Mutation', unregisterGym?: { __typename?: 'MeResponse', status: MutateStatus, message?: string | null, me?: { __typename?: 'User', userId: string, registerGyms?: Array<{ __typename?: 'GymInfo', gymId: string } | null> | null } | null } | null };
+export type UnregisterGymMutation = { __typename?: 'Mutation', unregisterGym?: { __typename?: 'RegisterGymResponse', message?: string | null, status: MutateStatus, registerGyms?: Array<{ __typename?: 'GymInfo', name: string, place: string, gymId: string } | null> | null } | null };
 
 export type GymQueryVariables = Exact<{
   gymId?: InputMaybe<Scalars['ID']>;
@@ -419,23 +433,95 @@ export function useCreateUserMutation(baseOptions?: Apollo.MutationHookOptions<C
 export type CreateUserMutationHookResult = ReturnType<typeof useCreateUserMutation>;
 export type CreateUserMutationResult = Apollo.MutationResult<CreateUserMutation>;
 export type CreateUserMutationOptions = Apollo.BaseMutationOptions<CreateUserMutation, CreateUserMutationVariables>;
+export const EditClimbingUserDocument = gql`
+    mutation EditClimbingUser($input: EditClimbingTimeInput) {
+  editClimbingUser(input: $input) {
+    status
+    message
+    gym {
+      gymId
+      climbingUser {
+        userId
+        avatarImage
+        nickname
+        startClimbingTime
+        finishClimbingTime
+      }
+    }
+  }
+}
+    `;
+export type EditClimbingUserMutationFn = Apollo.MutationFunction<EditClimbingUserMutation, EditClimbingUserMutationVariables>;
+
+/**
+ * __useEditClimbingUserMutation__
+ *
+ * To run a mutation, you first call `useEditClimbingUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useEditClimbingUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [editClimbingUserMutation, { data, loading, error }] = useEditClimbingUserMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useEditClimbingUserMutation(baseOptions?: Apollo.MutationHookOptions<EditClimbingUserMutation, EditClimbingUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<EditClimbingUserMutation, EditClimbingUserMutationVariables>(EditClimbingUserDocument, options);
+      }
+export type EditClimbingUserMutationHookResult = ReturnType<typeof useEditClimbingUserMutation>;
+export type EditClimbingUserMutationResult = Apollo.MutationResult<EditClimbingUserMutation>;
+export type EditClimbingUserMutationOptions = Apollo.BaseMutationOptions<EditClimbingUserMutation, EditClimbingUserMutationVariables>;
+export const EditMeDocument = gql`
+    mutation EditMe($input: UserInput!) {
+  editMe(input: $input) {
+    me {
+      nickname
+      avatarImage
+    }
+    status
+    message
+  }
+}
+    `;
+export type EditMeMutationFn = Apollo.MutationFunction<EditMeMutation, EditMeMutationVariables>;
+
+/**
+ * __useEditMeMutation__
+ *
+ * To run a mutation, you first call `useEditMeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useEditMeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [editMeMutation, { data, loading, error }] = useEditMeMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useEditMeMutation(baseOptions?: Apollo.MutationHookOptions<EditMeMutation, EditMeMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<EditMeMutation, EditMeMutationVariables>(EditMeDocument, options);
+      }
+export type EditMeMutationHookResult = ReturnType<typeof useEditMeMutation>;
+export type EditMeMutationResult = Apollo.MutationResult<EditMeMutation>;
+export type EditMeMutationOptions = Apollo.BaseMutationOptions<EditMeMutation, EditMeMutationVariables>;
 export const RegisterGymDocument = gql`
     mutation RegisterGym($GymInput: GymInput) {
   registerGym(GymInput: $GymInput) {
-    me {
-      userId
-      nickname
-      avatarImage
-      climbingTime {
-        finishClimbingTime
-        startClimbingTime
-      }
-      email
-      registerGyms {
-        name
-        place
-        gymId
-      }
+    registerGyms {
+      name
+      place
+      gymId
     }
     message
     status
@@ -505,14 +591,13 @@ export type RemoveGymMutationOptions = Apollo.BaseMutationOptions<RemoveGymMutat
 export const UnregisterGymDocument = gql`
     mutation UnregisterGym($gymId: ID!) {
   unregisterGym(gymId: $gymId) {
-    status
-    message
-    me {
-      userId
-      registerGyms {
-        gymId
-      }
+    registerGyms {
+      name
+      place
+      gymId
     }
+    message
+    status
   }
 }
     `;

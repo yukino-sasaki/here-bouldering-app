@@ -32,7 +32,7 @@ export const unregisterGym: MutationResolvers["unregisterGym"] = async (
   );
 
   return {
-    me,
+    registerGyms: me?.registerGyms,
     status: MutateStatus.Success,
     message: "ジムの登録を解除しました！",
   };

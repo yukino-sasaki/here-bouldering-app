@@ -1,0 +1,16 @@
+mutation EditClimbingUser($input: EditClimbingTimeInput) {
+  editClimbingUser(input: $input) {
+    status
+    message
+    gym {
+      gymId
+      climbingUser {
+        userId
+        avatarImage
+        nickname
+        startClimbingTime
+        finishClimbingTime
+      }
+    }
+  }
+}

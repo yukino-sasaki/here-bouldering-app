@@ -7,7 +7,7 @@ export const addClimbingUser: MutationResolvers["addClimbingUser"] = async (
   { input },
   { id }
 ) => {
-  const { gymId, ...registerClimbingUserInput } = input;
+  const { gymId, name, ...registerClimbingUserInput } = input;
   const { finishClimbingTime, startClimbingTime } = registerClimbingUserInput;
   console.log(registerClimbingUserInput);
 
@@ -68,7 +68,7 @@ export const addClimbingUser: MutationResolvers["addClimbingUser"] = async (
       $push: {
         climbingTime: {
           gymId,
-          name: "仮のじむ",
+          name,
           startClimbingTime,
           finishClimbingTime,
         },

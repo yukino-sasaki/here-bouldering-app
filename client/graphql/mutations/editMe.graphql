@@ -1,0 +1,10 @@
+mutation EditMe($input: UserInput!) {
+  editMe(input: $input) {
+    me {
+      nickname
+      avatarImage
+    }
+    status
+    message
+  }
+}

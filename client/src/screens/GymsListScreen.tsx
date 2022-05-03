@@ -13,6 +13,7 @@ import { MdPlace } from "react-icons/md";
 import {
   Gym,
   MeDocument,
+  MeQuery,
   MutateStatus,
   useGymsQuery,
   useRegisterGymMutation,
@@ -45,17 +46,27 @@ const GymsListScreen = () => {
 
   const registerGym = async (gym: Gym) => {
     try {
-      const { creater, __typename, ...gymInput } = gym;
+      const { creater, __typename, climbingUser, ...gymInput } = gym;
       const response = await registerGymMutation({
         variables: {
           GymInput: { ...gymInput },
         },
         update(cache, { data }) {
-          const newRegisterGyms = data?.registerGym?.me;
+          const newRegisterGyms = data?.registerGym?.registerGyms;
+          const meQuery = cache.readQuery<MeQuery>({
+            query: MeDocument,
+            variables: null,
+          });
+          const existMe = meQuery?.me;
+          const existRegisterGyms = existMe?.registerGyms ?? [];
+          console.log("exist", meQuery);
           cache.writeQuery({
             query: MeDocument,
             data: {
-              me: newRegisterGyms,
+              me: {
+                ...existMe,
+                registerGyms: [...existRegisterGyms, newRegisterGyms],
+              },
             },
           });
         },
@@ -77,22 +88,6 @@ const GymsListScreen = () => {
       } else {
         showToast(registerGym);
       }
-
-      // else if (registerGym?.status === MutateStatus.Success) {
-      //   toast({
-      //     title: "ジムを登録しました",
-      //     status: "success",
-      //     duration: 5000,
-      //     isClosable: true,
-      //   });
-      // } else if (registerGym?.message) {
-      //   toast({
-      //     title: `${registerGym?.message}`,
-      //     status: "warning",
-      //     duration: 5000,
-      //     isClosable: true,
-      //   });
-      // }
     } catch (error) {
       throw new Error(`${error}`);
     }

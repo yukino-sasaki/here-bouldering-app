@@ -52,7 +52,7 @@ export const registerGym: MutationResolvers["registerGym"] = async (
   );
 
   return {
-    me,
+    registerGyms: me?.registerGyms,
     status: MutateStatus.Success,
     message: "成功しました！",
   };
