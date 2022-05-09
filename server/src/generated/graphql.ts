@@ -41,7 +41,7 @@ export type ClimbingUserResponse = {
 
 export type Creater = {
   __typename?: 'Creater';
-  avatarImage?: Maybe<Scalars['String']>;
+  avatarImage: Scalars['String'];
   nickname: Scalars['String'];
   userId: Scalars['ID'];
 };
@@ -378,7 +378,7 @@ export type ClimbingUserResponseResolvers<ContextType = Context, ParentType exte
 };
 
 export type CreaterResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Creater'] = ResolversParentTypes['Creater']> = {
-  avatarImage?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  avatarImage?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   nickname?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   userId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;

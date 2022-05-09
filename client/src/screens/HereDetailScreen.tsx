@@ -6,6 +6,7 @@ import {
   Center,
   Divider,
   Flex,
+  Icon,
   Input,
   Modal,
   ModalBody,
@@ -24,8 +25,9 @@ import { format } from "date-fns";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { FaTrashAlt } from "react-icons/fa";
-import { MdPlace } from "react-icons/md";
 import { useLocation } from "react-router-dom";
+import { CreaterBlock } from "../components/CreaterBlock";
+import { PlaceBlock } from "../components/PlaceBlock";
 import {
   GymDocument,
   MeDocument,
@@ -42,6 +44,7 @@ const HereDetailScreen = () => {
   const { showToast } = useShowToast();
   const { gymId } = location.state as { gymId: string };
   const nowDateTime = new Date();
+  const now = nowDateTime.getHours() * 3600 + nowDateTime.getMinutes() * 60;
 
   const [startTime, setStartTime] = useState<string>(
     format(nowDateTime, "HH:mm")
@@ -71,6 +74,10 @@ const HereDetailScreen = () => {
     const hour = Number(hour_min[0]);
     const min = Number(hour_min[1]);
     return hour * 3600 + min * 60;
+  };
+
+  const calcTime = (time: string) => {
+    return new Date(time).getHours() * 3600 + new Date(time).getMinutes() * 60;
   };
 
   const onSubmit: SubmitHandler<RegisterClimbingUserInput> = async (data) => {
@@ -117,13 +124,8 @@ const HereDetailScreen = () => {
     finishTime?: string | null
   ) => {
     if (!startTime || !finishTime) return null;
-    const start =
-      new Date(startTime).getHours() * 3600 +
-      new Date(startTime).getMinutes() * 60;
-    const finish =
-      new Date(finishTime).getHours() * 3600 +
-      new Date(finishTime).getMinutes() * 60;
-    const now = nowDateTime.getHours() * 3600 + nowDateTime.getMinutes() * 60;
+    const start = calcTime(startTime);
+    const finish = calcTime(finishTime);
 
     if (now >= start && now <= finish) {
       return { color: "teal", message: "登っています！" };
@@ -134,9 +136,17 @@ const HereDetailScreen = () => {
     } else return null;
   };
 
-  const findMe = gym.climbingUser?.find(
-    (user) => user?.startClimbingTime && user?.userId === me.userId
-  );
+  const findMe = gym.climbingUser?.find((user) => {
+    if (user?.finishClimbingTime) {
+      return (
+        calcTime(user.finishClimbingTime) > now &&
+        user?.startClimbingTime &&
+        user?.userId === me.userId
+      );
+    } else {
+      return false;
+    }
+  });
 
   return (
     <div className="mx-auto">
@@ -146,19 +156,23 @@ const HereDetailScreen = () => {
             {name}
           </Text>
           <Spacer />
-          <FaTrashAlt onClick={onClickRemoveGym} />
+          {me.userId === creater.userId && (
+            <Icon
+              as={FaTrashAlt}
+              onClick={onClickRemoveGym}
+              color="red.700"
+              w={6}
+              h={6}
+              my="auto"
+            />
+          )}
         </Flex>
         <Flex>
-          <Flex>
-            <MdPlace />
-            <Text>{place}</Text>
-          </Flex>
+          <PlaceBlock place={place} />
           <Spacer />
-          <Text>作成者:</Text>
-          <Avatar bg={avatarImage as ResponsiveValue<Union<"current">>} />
-          <Text>{nickname}</Text>
+          <CreaterBlock nickname={nickname} avatarImage={avatarImage} />
         </Flex>
-        <Divider colorScheme="darkgray" mb="20px" />
+        <Divider colorScheme="darkgray" mb="5" mt="2" />
         <Text my="20px">登録をしている人</Text>
         {climbingUser?.map((user, index) => {
           if (!user || !user?.finishClimbingTime || !user.startClimbingTime)
@@ -203,7 +217,7 @@ const HereDetailScreen = () => {
                   </Flex>
                 </Box>
               </Flex>
-              <Divider colorScheme="gray.100" mt="10px" />
+              <Divider color="#CBD5E0" mt="10px" />
             </Box>
           );
         })}

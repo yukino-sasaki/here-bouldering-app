@@ -2,11 +2,16 @@ import {
   Avatar,
   Button,
   Center,
+  Drawer,
+  DrawerBody,
+  DrawerCloseButton,
+  DrawerHeader,
   Flex,
   FormControl,
   FormLabel,
   Grid,
   GridItem,
+  Icon,
   Input,
   Menu,
   MenuButton,
@@ -19,6 +24,7 @@ import {
 import "focus-visible/dist/focus-visible";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { BsThreeDotsVertical } from "react-icons/bs";
+import { HiOutlineMenu } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
 import { Modal } from "../components/Modal";
 import {
@@ -51,6 +57,7 @@ const HomeScreen = () => {
 
   const createGym = useDisclosure();
   const userSetting = useDisclosure();
+  const drawer = useDisclosure();
 
   if (loading || error)
     return (
@@ -115,6 +122,14 @@ const HomeScreen = () => {
     <>
       <div className="bg-darkgray flex-col justify-between h-16 flex">
         <div className="flex flex-row justify-between px-8">
+          <Icon
+            as={HiOutlineMenu}
+            color="white"
+            w={8}
+            h={8}
+            my="auto"
+            onClick={drawer.onOpen}
+          />
           <h2 className="text-3xl text-white h-9 my-auto">Here!Bouldering!</h2>
           <div className="w-28">
             <div className="flex flex-row justify-center">
@@ -126,80 +141,99 @@ const HomeScreen = () => {
           </div>
         </div>
       </div>
-      <div className="flex h-full">
-        <div className="bg-gray w-1/5 h-screen">
-          <Button colorScheme="white" isFullWidth onClick={userSetting.onOpen}>
-            ユーザー名を変更する
-          </Button>
-          <Button colorScheme="white" isFullWidth onClick={createGym.onOpen}>
-            新規でジムを作成する
-          </Button>
-          <Button
-            colorScheme="white"
-            isFullWidth
-            onClick={() => navigate("/gymsList")}
-          >
-            ジムをダッシュボードに登録する
-          </Button>
-        </div>
-        <div className="bg-white w-4/5 px-5 pt-8">
-          <Grid gap={5} templateColumns="repeat(4, 1fr)">
-            {registerGyms &&
-              registerGyms.map((registerGym, i) => {
-                if (!registerGym) return <></>;
-                const { name, place, gymId } = registerGym;
-                return gymId === "" ? (
-                  <GridItem
+
+      <div className="bg-white w-full h-screen px-5 pt-8 relative">
+        <Grid gap={5} templateColumns="repeat(4, 1fr)">
+          {registerGyms &&
+            registerGyms.map((registerGym, i) => {
+              if (!registerGym) return <></>;
+              const { name, place, gymId } = registerGym;
+              return gymId === "" ? (
+                <GridItem
+                  w="100%"
+                  h="28"
+                  bg="white"
+                  borderRadius="md"
+                  boxShadow="md"
+                  key={i}
+                >
+                  <Center w="100%" bg="gray.500" h="20" borderTopRadius="md">
+                    <Text color="whiteAlpha.300">
+                      このジムは作成者によって削除されました
+                    </Text>
+                  </Center>
+                </GridItem>
+              ) : (
+                <GridItem
+                  w="100%"
+                  h="28"
+                  bg="white"
+                  borderRadius="md"
+                  boxShadow="md"
+                  key={i}
+                >
+                  <Center
                     w="100%"
-                    h="28"
-                    bg="white"
-                    borderRadius="md"
-                    boxShadow="md"
-                    key={i}
+                    bg="blue.500"
+                    h="20"
+                    borderTopRadius="md"
+                    onClick={() => navigate("/detail", { state: { gymId } })}
                   >
-                    <Center w="100%" bg="gray.500" h="20" borderTopRadius="md">
-                      <Text color="whiteAlpha.300">
-                        このジムは作成者によって削除されました
-                      </Text>
-                    </Center>
-                  </GridItem>
-                ) : (
-                  <GridItem
-                    w="100%"
-                    h="28"
-                    bg="white"
-                    borderRadius="md"
-                    boxShadow="md"
-                    key={i}
-                  >
-                    <Center
-                      w="100%"
-                      bg="blue.500"
-                      h="20"
-                      borderTopRadius="md"
-                      onClick={() => navigate("/detail", { state: { gymId } })}
-                    >
-                      <div className="text-white text-2xl">{name}</div>
-                    </Center>
-                    <Flex>
-                      <div className="px-3 leading-8">{place}</div>
-                      <Spacer />
-                      <Menu>
-                        <MenuButton as={Button}>
-                          <BsThreeDotsVertical />
-                        </MenuButton>
-                        <MenuList>
-                          <MenuItem onClick={() => onClickUnregisterGym(gymId)}>
-                            登録を解除
-                          </MenuItem>
-                        </MenuList>
-                      </Menu>
-                    </Flex>
-                  </GridItem>
-                );
-              })}
-          </Grid>
-        </div>
+                    <div className="text-white text-2xl">{name}</div>
+                  </Center>
+                  <Flex>
+                    <div className="px-3 leading-8">{place}</div>
+                    <Spacer />
+                    <Menu>
+                      <MenuButton as={Button}>
+                        <BsThreeDotsVertical />
+                      </MenuButton>
+                      <MenuList>
+                        <MenuItem onClick={() => onClickUnregisterGym(gymId)}>
+                          登録を解除
+                        </MenuItem>
+                      </MenuList>
+                    </Menu>
+                  </Flex>
+                </GridItem>
+              );
+            })}
+        </Grid>
+
+        <Drawer
+          placement="left"
+          onClose={drawer.onClose}
+          isOpen={drawer.isOpen}
+          size="xs"
+        >
+          <div className="bg-menuBg z-50 h-screen absolute w-1/5 top-0 left-0">
+            <DrawerCloseButton color="white" />
+            <DrawerHeader color="white">設定</DrawerHeader>
+            <DrawerBody>
+              <Button
+                colorScheme="white"
+                isFullWidth
+                onClick={userSetting.onOpen}
+              >
+                ユーザー名を変更する
+              </Button>
+              <Button
+                colorScheme="white"
+                isFullWidth
+                onClick={createGym.onOpen}
+              >
+                新規でジムを作成する
+              </Button>
+              <Button
+                colorScheme="white"
+                isFullWidth
+                onClick={() => navigate("/gymsList")}
+              >
+                ジムをダッシュボードに登録する
+              </Button>
+            </DrawerBody>
+          </div>
+        </Drawer>
       </div>
 
       <Modal

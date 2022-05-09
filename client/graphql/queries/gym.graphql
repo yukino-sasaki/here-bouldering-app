@@ -4,6 +4,7 @@ query Gym($gymId: ID) {
     name
     place
     creater {
+      userId
       nickname
       avatarImage
     }

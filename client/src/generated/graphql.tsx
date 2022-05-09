@@ -41,7 +41,7 @@ export type ClimbingUserResponse = {
 
 export type Creater = {
   __typename?: 'Creater';
-  avatarImage?: Maybe<Scalars['String']>;
+  avatarImage: Scalars['String'];
   nickname: Scalars['String'];
   userId: Scalars['ID'];
 };
@@ -245,7 +245,7 @@ export type AddGymsMutationVariables = Exact<{
 }>;
 
 
-export type AddGymsMutation = { __typename?: 'Mutation', addGyms?: { __typename?: 'Gym', gymId: string, name: string, place: string, creater: { __typename?: 'Creater', userId: string, nickname: string, avatarImage?: string | null }, climbingUser?: Array<{ __typename?: 'ClimbingUser', userId: string } | null> | null } | null };
+export type AddGymsMutation = { __typename?: 'Mutation', addGyms?: { __typename?: 'Gym', gymId: string, name: string, place: string, creater: { __typename?: 'Creater', userId: string, nickname: string, avatarImage: string }, climbingUser?: Array<{ __typename?: 'ClimbingUser', userId: string } | null> | null } | null };
 
 export type CreateUserMutationVariables = Exact<{
   nickname: Scalars['String'];
@@ -295,12 +295,12 @@ export type GymQueryVariables = Exact<{
 }>;
 
 
-export type GymQuery = { __typename?: 'Query', gym?: { __typename?: 'Gym', gymId: string, name: string, place: string, creater: { __typename?: 'Creater', nickname: string, avatarImage?: string | null }, climbingUser?: Array<{ __typename?: 'ClimbingUser', userId: string, nickname: string, avatarImage: string, finishClimbingTime?: string | null, startClimbingTime?: string | null } | null> | null } | null };
+export type GymQuery = { __typename?: 'Query', gym?: { __typename?: 'Gym', gymId: string, name: string, place: string, creater: { __typename?: 'Creater', userId: string, nickname: string, avatarImage: string }, climbingUser?: Array<{ __typename?: 'ClimbingUser', userId: string, nickname: string, avatarImage: string, finishClimbingTime?: string | null, startClimbingTime?: string | null } | null> | null } | null };
 
 export type GymsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GymsQuery = { __typename?: 'Query', gyms: Array<{ __typename?: 'Gym', gymId: string, name: string, place: string, creater: { __typename?: 'Creater', userId: string, nickname: string, avatarImage?: string | null } }> };
+export type GymsQuery = { __typename?: 'Query', gyms: Array<{ __typename?: 'Gym', gymId: string, name: string, place: string, creater: { __typename?: 'Creater', userId: string, nickname: string, avatarImage: string } }> };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -634,6 +634,7 @@ export const GymDocument = gql`
     name
     place
     creater {
+      userId
       nickname
       avatarImage
     }

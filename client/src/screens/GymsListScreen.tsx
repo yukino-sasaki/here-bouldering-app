@@ -1,15 +1,14 @@
 import {
-  Avatar,
   Box,
   Button,
-  ResponsiveValue,
+  Icon,
   SimpleGrid,
   Text,
   useToast,
 } from "@chakra-ui/react";
-import { Union } from "@chakra-ui/styled-system/dist/declarations/src/utils";
 import React from "react";
 import { MdPlace } from "react-icons/md";
+import { CreaterBlock } from "../components/CreaterBlock";
 import {
   Gym,
   MeDocument,
@@ -107,11 +106,15 @@ const GymsListScreen = () => {
                       <div className="flex flex-rwo justify-start">
                         <Text fontSize="4xl">{gym.name}</Text>
                         <div className="flex flex-row justify-start">
-                          <MdPlace />
+                          <Icon as={MdPlace} w={6} h={6} />
                           <Text fontSize="lg">{gym.place}</Text>
                         </div>
                       </div>
-                      <div className="flex flex-row items-end">
+                      <CreaterBlock
+                        nickname={gym?.creater.nickname}
+                        avatarImage={gym.creater.avatarImage}
+                      />
+                      {/* <div className="flex flex-row items-end">
                         <Text>作成者:</Text>
                         <Avatar
                           bg={
@@ -122,7 +125,7 @@ const GymsListScreen = () => {
                           size="sm"
                         />
                         <Text>{gym?.creater.nickname}</Text>
-                      </div>
+                      </div> */}
                     </div>
                     <Button
                       colorScheme="blue"

@@ -1,4 +1,4 @@
-import { Button, FormControl, FormLabel, Input } from "@chakra-ui/react";
+import { Box, Button, FormControl, FormLabel, Input } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import useFirebase from "../useFirebase";
 
@@ -8,7 +8,7 @@ type FormData = {
 };
 
 const LogInScreen = () => {
-  const { login, handleSignIn } = useFirebase();
+  const { login } = useFirebase();
 
   const {
     handleSubmit,
@@ -21,9 +21,7 @@ const LogInScreen = () => {
     login(email, password);
   };
   return (
-    <>
-      <Button onClick={handleSignIn}>googleでログインする</Button>
-      <Button>メールアドレスでログインする</Button>
+    <Box maxW={"60%"} mx="auto">
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormControl>
           <FormLabel>メールアドレス</FormLabel>
@@ -47,10 +45,10 @@ const LogInScreen = () => {
           isLoading={isSubmitting}
           type="submit"
         >
-          Submit
+          ログインする
         </Button>
       </form>
-    </>
+    </Box>
   );
 };
 

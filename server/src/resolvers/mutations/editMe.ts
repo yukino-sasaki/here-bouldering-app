@@ -1,4 +1,5 @@
 import { MutateStatus, MutationResolvers } from "../../generated/graphql";
+import Gym from "../../models/gyms";
 import User from "../../models/user";
 
 export const editMe: MutationResolvers["editMe"] = async (
@@ -21,6 +22,22 @@ export const editMe: MutationResolvers["editMe"] = async (
       new: true,
     }
   );
+
+  await Gym.updateMany(
+    {
+      "creater.userId": id,
+    },
+    {
+      $set: {
+        "creater.nickname": nickname,
+        "creater.avatarImage": avatarImage,
+      },
+    },
+    {
+      new: true,
+    }
+  );
+
   return {
     me: updateMe,
     message: "ユーザー情報をアップデートしました！",

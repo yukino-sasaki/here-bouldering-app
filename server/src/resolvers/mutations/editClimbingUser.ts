@@ -15,18 +15,6 @@ export const editClimbingUser: MutationResolvers["editClimbingUser"] = async (
     };
   const { gymId, finishClimbingTime, startClimbingTime } = input;
 
-  const test = await Gym.findOne(
-    {
-      gymId,
-      // "climbingUser.$.userId": id,
-    }
-    // {
-    //   arrayFilters: [{ "climbingUser.userId": id }],
-    // }
-  );
-
-  console.log("test", test);
-
   const editClimbingUser = await Gym.findOneAndUpdate(
     {
       gymId,
