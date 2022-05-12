@@ -24,12 +24,14 @@ const SignInScreen = () => {
   };
 
   return (
-    <Box maxW={"60%"} mx="auto">
+    <Box maxW={"60%"} m="auto">
       <Button>メールアドレスでサインインする</Button>
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormControl>
           <FormLabel>メールアドレス</FormLabel>
           <Input
+            variant="flushed"
+            placeholder="xxxxxx@gmail.com"
             {...register("email", {
               required: "This is required",
             })}
@@ -38,6 +40,8 @@ const SignInScreen = () => {
         <FormControl>
           <FormLabel>パスワード</FormLabel>
           <Input
+            placeholder="password"
+            variant="flushed"
             {...register("password", {
               required: "This is required",
             })}

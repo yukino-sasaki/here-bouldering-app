@@ -19,6 +19,9 @@ export const resetClimbingTime = async () => {
         "climbingUser.$[].finishClimbingTime": null,
         "climbingUser.$[].startClimbingTime": null,
       },
+    },
+    {
+      multi: true,
     }
   );
 };

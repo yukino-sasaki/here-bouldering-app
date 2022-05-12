@@ -13,19 +13,15 @@ import {
   GridItem,
   Icon,
   Input,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
   Spacer,
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
 import "focus-visible/dist/focus-visible";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { BsThreeDotsVertical } from "react-icons/bs";
 import { HiOutlineMenu } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
+import { Menu } from "../components/Menu";
 import { Modal } from "../components/Modal";
 import {
   MeDocument,
@@ -184,7 +180,11 @@ const HomeScreen = () => {
                   <Flex>
                     <div className="px-3 leading-8">{place}</div>
                     <Spacer />
-                    <Menu>
+                    <Menu
+                      menuItem="登録を解除"
+                      onClick={() => onClickUnregisterGym(gymId)}
+                    />
+                    {/* <Menu>
                       <MenuButton as={Button}>
                         <BsThreeDotsVertical />
                       </MenuButton>
@@ -193,7 +193,7 @@ const HomeScreen = () => {
                           登録を解除
                         </MenuItem>
                       </MenuList>
-                    </Menu>
+                    </Menu> */}
                   </Flex>
                 </GridItem>
               );
@@ -206,7 +206,7 @@ const HomeScreen = () => {
           isOpen={drawer.isOpen}
           size="xs"
         >
-          <div className="bg-menuBg z-50 h-screen absolute w-1/5 top-0 left-0">
+          <div className="bg-menuBg z-50 h-screen absolute top-0 left-0">
             <DrawerCloseButton color="white" />
             <DrawerHeader color="white">設定</DrawerHeader>
             <DrawerBody>

@@ -103,7 +103,7 @@ const GymsListScreen = () => {
                 <Box bg="white" height="112px" p="2" borderRadius="md">
                   <div className="flex justify-between h-27">
                     <div>
-                      <div className="flex flex-rwo justify-start">
+                      <div className="flex-row justify-start">
                         <Text fontSize="4xl">{gym.name}</Text>
                         <div className="flex flex-row justify-start">
                           <Icon as={MdPlace} w={6} h={6} />
@@ -114,18 +114,6 @@ const GymsListScreen = () => {
                         nickname={gym?.creater.nickname}
                         avatarImage={gym.creater.avatarImage}
                       />
-                      {/* <div className="flex flex-row items-end">
-                        <Text>作成者:</Text>
-                        <Avatar
-                          bg={
-                            gym.creater.avatarImage as ResponsiveValue<
-                              Union<"current">
-                            >
-                          }
-                          size="sm"
-                        />
-                        <Text>{gym?.creater.nickname}</Text>
-                      </div> */}
                     </div>
                     <Button
                       colorScheme="blue"
