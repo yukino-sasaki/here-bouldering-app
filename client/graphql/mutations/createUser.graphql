@@ -3,7 +3,5 @@ mutation CreateUser($nickname: String!, $avatarImage: String!) {
     userId
     nickname
     avatarImage
-    startClimbingTime
-    finishClimbingTime
   }
 }

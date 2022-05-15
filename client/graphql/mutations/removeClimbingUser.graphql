@@ -1,0 +1,6 @@
+mutation RemoveClimbingUser($climbingId: ID!) {
+  removeClimbingUser(climbingId: $climbingId) {
+    status
+    message
+  }
+}

@@ -1,22 +1,27 @@
 import {
-  Avatar,
   Box,
   Button,
-  Divider,
-  ResponsiveValue,
+  Icon,
   SimpleGrid,
   Text,
   useToast,
 } from "@chakra-ui/react";
-import { Union } from "@chakra-ui/styled-system/dist/declarations/src/utils";
 import React from "react";
 import { MdPlace } from "react-icons/md";
+import { CreaterBlock } from "../components/CreaterBlock";
 import {
   Gym,
   MeDocument,
+  MeQuery,
+  MutateStatus,
   useGymsQuery,
   useRegisterGymMutation,
 } from "../generated/graphql";
+
+type MutationResponse = {
+  status: MutateStatus;
+  message?: string | null;
+};
 
 const GymsListScreen = () => {
   const [registerGymMutation] = useRegisterGymMutation();
@@ -26,19 +31,41 @@ const GymsListScreen = () => {
   const toast = useToast();
   console.log(gyms);
 
+  function showToast<T extends MutationResponse>(
+    response?: T | null,
+    title?: string
+  ) {
+    toast({
+      title: title ? title : response?.message,
+      status: response?.status,
+      duration: 5000,
+      isClosable: true,
+    });
+  }
+
   const registerGym = async (gym: Gym) => {
     try {
-      const { creater, __typename, ...gymInput } = gym;
+      const { creater, __typename, climbingUser, ...gymInput } = gym;
       const response = await registerGymMutation({
         variables: {
           GymInput: { ...gymInput },
         },
         update(cache, { data }) {
-          const newRegisterGyms = data?.registerGym?.me;
+          const newRegisterGyms = data?.registerGym?.registerGyms;
+          const meQuery = cache.readQuery<MeQuery>({
+            query: MeDocument,
+            variables: null,
+          });
+          const existMe = meQuery?.me;
+          const existRegisterGyms = existMe?.registerGyms ?? [];
+          console.log("exist", meQuery);
           cache.writeQuery({
             query: MeDocument,
             data: {
-              me: newRegisterGyms,
+              me: {
+                ...existMe,
+                registerGyms: newRegisterGyms,
+              },
             },
           });
         },
@@ -57,20 +84,8 @@ const GymsListScreen = () => {
           isClosable: true,
         });
         throw new Error(`${errors}`);
-      } else if (registerGym?.statusMessage) {
-        toast({
-          title: `${registerGym?.statusMessage}`,
-          status: "warning",
-          duration: 5000,
-          isClosable: true,
-        });
-      } else if (registerGym?.success) {
-        toast({
-          title: "ジムを登録しました",
-          status: "success",
-          duration: 5000,
-          isClosable: true,
-        });
+      } else {
+        showToast(registerGym);
       }
     } catch (error) {
       throw new Error(`${error}`);
@@ -84,29 +99,21 @@ const GymsListScreen = () => {
         {gyms &&
           gyms.map((gym, index) => {
             return (
-              <div key={index}>
+              <Box key={index}>
                 <Box bg="white" height="112px" p="2" borderRadius="md">
-                  <div className="flex justify-between h-27">
+                  <div className="flex justify-between">
                     <div>
-                      <div className="flex flex-rwo justify-start">
+                      <div className="flex-row justify-start">
                         <Text fontSize="4xl">{gym.name}</Text>
                         <div className="flex flex-row justify-start">
-                          <MdPlace />
+                          <Icon as={MdPlace} w={6} h={6} />
                           <Text fontSize="lg">{gym.place}</Text>
                         </div>
                       </div>
-                      <div className="flex flex-row items-end">
-                        <Text>作成者:</Text>
-                        <Avatar
-                          bg={
-                            gym.creater.avatarImage as ResponsiveValue<
-                              Union<"current">
-                            >
-                          }
-                          size="sm"
-                        />
-                        <Text>{gym?.creater.nickname}</Text>
-                      </div>
+                      <CreaterBlock
+                        nickname={gym?.creater.nickname}
+                        avatarImage={gym.creater.avatarImage}
+                      />
                     </div>
                     <Button
                       colorScheme="blue"
@@ -117,8 +124,7 @@ const GymsListScreen = () => {
                     </Button>
                   </div>
                 </Box>
-                <Divider />
-              </div>
+              </Box>
             );
           })}
       </SimpleGrid>

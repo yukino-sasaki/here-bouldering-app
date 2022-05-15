@@ -1,18 +1,9 @@
 mutation RegisterGym($GymInput: GymInput) {
   registerGym(GymInput: $GymInput) {
-    me {
-      userId
-      startClimbingTime
-      finishClimbingTime
-      nickname
-      avatarImage
-      registerGyms {
-        name
-        place
-        gymId
-      }
+    registerGyms {
+      ...RegisterGymParts
     }
-    statusMessage
-    success
+    message
+    status
   }
 }

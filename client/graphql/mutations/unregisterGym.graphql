@@ -1,0 +1,9 @@
+mutation UnregisterGym($gymId: ID!) {
+  unregisterGym(gymId: $gymId) {
+    registerGyms {
+      ...RegisterGymParts
+    }
+    message
+    status
+  }
+}

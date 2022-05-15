@@ -1,0 +1,5 @@
+fragment RegisterGymParts on GymInfo {
+  name
+  place
+  gymId
+}

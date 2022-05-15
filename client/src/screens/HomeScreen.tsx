@@ -2,19 +2,36 @@ import {
   Avatar,
   Button,
   Center,
+  Drawer,
+  DrawerBody,
+  DrawerCloseButton,
+  DrawerHeader,
+  Flex,
   FormControl,
   FormLabel,
   Grid,
   GridItem,
+  Icon,
   Input,
+  Spacer,
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
 import "focus-visible/dist/focus-visible";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { HiOutlineMenu } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
+import { Menu } from "../components/Menu";
 import { Modal } from "../components/Modal";
-import { useAddGymsMutation, useMeQuery } from "../generated/graphql";
+import {
+  MeDocument,
+  useAddGymsMutation,
+  useEditMeMutation,
+  useMeQuery,
+  UserInput,
+  useUnregisterGymMutation,
+} from "../generated/graphql";
+import { useShowToast } from "../hooks/useShowToast";
 
 type AddGymsInput = {
   name: string;
@@ -24,20 +41,25 @@ type AddGymsInput = {
 const HomeScreen = () => {
   const navigate = useNavigate();
   const { register, handleSubmit } = useForm<AddGymsInput>();
+  const { register: editMeRegister, handleSubmit: editMeHandleSubmit } =
+    useForm<UserInput>();
 
+  const { showToast } = useShowToast();
   const [addGymsMutation] = useAddGymsMutation();
+  const [editMeMutation] = useEditMeMutation();
+  const [unregisterGymMutation] = useUnregisterGymMutation();
   const { data, loading, error } = useMeQuery();
   const me = data?.me;
-  console.log(data);
-
+  console.log(me);
   const createGym = useDisclosure();
   const userSetting = useDisclosure();
+  const drawer = useDisclosure();
 
   if (loading || error)
     return (
       <div>
         loading:{loading}, error: {error}
-        情報を取得できませんでした。お手数ですが、再読み込みかもう一度サインインをし直してください
+        情報を取得できませんでした。しばらく待っても画面が表示されない場合、お手数ですが再読み込みかもう一度サインインをし直してください
       </div>
     );
   if (!me) return <div>me is null</div>;
@@ -64,10 +86,46 @@ const HomeScreen = () => {
     }
   };
 
+  const editMeSubmit: SubmitHandler<UserInput> = async (data) => {
+    const { nickname } = data;
+    try {
+      const response = await editMeMutation({
+        variables: {
+          input: { nickname, avatarImage },
+        },
+        refetchQueries: [MeDocument],
+      });
+
+      showToast(response.data?.editMe);
+    } catch (error) {
+      throw console.log(error);
+    }
+  };
+
+  const onClickUnregisterGym = async (gymId: string) => {
+    try {
+      const response = await unregisterGymMutation({
+        variables: { gymId },
+        refetchQueries: [MeDocument],
+      });
+      showToast(response.data?.unregisterGym);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <>
       <div className="bg-darkgray flex-col justify-between h-16 flex">
         <div className="flex flex-row justify-between px-8">
+          <Icon
+            as={HiOutlineMenu}
+            color="white"
+            w={8}
+            h={8}
+            my="auto"
+            onClick={drawer.onOpen}
+          />
           <h2 className="text-3xl text-white h-9 my-auto">Here!Bouldering!</h2>
           <div className="w-28">
             <div className="flex flex-row justify-center">
@@ -79,47 +137,105 @@ const HomeScreen = () => {
           </div>
         </div>
       </div>
-      <div className="flex h-full">
-        <div className="bg-gray w-1/5 h-screen">
-          <Button colorScheme="white" isFullWidth onClick={userSetting.onOpen}>
-            ユーザー名を変更する
-          </Button>
-          <Button colorScheme="white" isFullWidth onClick={createGym.onOpen}>
-            新規でジムを作成する
-          </Button>
-          <Button
-            colorScheme="white"
-            isFullWidth
-            onClick={() => navigate("/gymsList")}
-          >
-            ジムをダッシュボードに登録する
-          </Button>
-        </div>
-        <div className="bg-white w-4/5 px-5 pt-8">
-          <Grid gap={5} templateColumns="repeat(4, 1fr)">
-            {registerGyms &&
-              registerGyms.map((registerGym, i) => {
-                if (!registerGym) return <></>;
-                const { name, place, gymId } = registerGym;
-                return (
-                  <GridItem
+
+      <div className="bg-white w-full h-screen px-5 pt-8 relative">
+        <Grid gap={5} templateColumns="repeat(4, 1fr)">
+          {registerGyms.length !== 0 &&
+            registerGyms.map((registerGym, i) => {
+              const { name, place, gymId } = registerGym;
+              const menuItem = [
+                {
+                  title: "登録を解除",
+                  onClick: () => onClickUnregisterGym(gymId),
+                },
+              ];
+              return gymId === "" ? (
+                <GridItem
+                  w="100%"
+                  h="28"
+                  bg="white"
+                  borderRadius="md"
+                  boxShadow="md"
+                  key={i}
+                >
+                  <Center w="100%" bg="gray.500" h="20" borderTopRadius="md">
+                    <Text color="whiteAlpha.300">
+                      このジムは作成者によって削除されました
+                    </Text>
+                  </Center>
+                </GridItem>
+              ) : (
+                <GridItem
+                  w="100%"
+                  h="28"
+                  bg="white"
+                  borderRadius="md"
+                  boxShadow="md"
+                  key={i}
+                >
+                  <Center
                     w="100%"
-                    h="28"
-                    bg="white"
-                    borderRadius="md"
-                    boxShadow="md"
+                    bg="blue.500"
+                    h="20"
+                    borderTopRadius="md"
                     onClick={() => navigate("/detail", { state: { gymId } })}
-                    key={i}
                   >
-                    <Center w="100%" bg="blue.500" h="20" borderTopRadius="md">
-                      <div className="text-white text-2xl">{name}</div>
-                    </Center>
+                    <div className="text-white text-2xl">{name}</div>
+                  </Center>
+                  <Flex>
                     <div className="px-3 leading-8">{place}</div>
-                  </GridItem>
-                );
-              })}
-          </Grid>
-        </div>
+                    <Spacer />
+                    <Menu menuItem={menuItem} />
+                    {/* <Menu>
+                      <MenuButton as={Button}>
+                        <BsThreeDotsVertical />
+                      </MenuButton>
+                      <MenuList>
+                        <MenuItem onClick={() => onClickUnregisterGym(gymId)}>
+                          登録を解除
+                        </MenuItem>
+                      </MenuList>
+                    </Menu> */}
+                  </Flex>
+                </GridItem>
+              );
+            })}
+        </Grid>
+
+        <Drawer
+          placement="left"
+          onClose={drawer.onClose}
+          isOpen={drawer.isOpen}
+          size="xs"
+        >
+          <div className="bg-menuBg z-50 h-screen absolute top-0 left-0">
+            <DrawerCloseButton color="white" />
+            <DrawerHeader color="white">設定</DrawerHeader>
+            <DrawerBody>
+              <Button
+                colorScheme="white"
+                isFullWidth
+                onClick={userSetting.onOpen}
+              >
+                ユーザー名を変更する
+              </Button>
+              <Button
+                colorScheme="white"
+                isFullWidth
+                onClick={createGym.onOpen}
+              >
+                新規でジムを作成する
+              </Button>
+              <Button
+                colorScheme="white"
+                isFullWidth
+                onClick={() => navigate("/gymsList")}
+              >
+                ジムをダッシュボードに登録する
+              </Button>
+            </DrawerBody>
+          </div>
+        </Drawer>
       </div>
 
       <Modal
@@ -156,12 +272,17 @@ const HomeScreen = () => {
         header={"ユーザー名を変更する"}
         submit="変更する"
         // templary
-        handleSubmit={handleSubmit}
-        onSubmit={addGymsSubmit}
+        handleSubmit={editMeHandleSubmit}
+        onSubmit={editMeSubmit}
       >
         <FormControl>
           <FormLabel>変更後のユーザー名</FormLabel>
-          <Input />
+          <Input
+            id="nickname"
+            {...editMeRegister("nickname", {
+              required: "変更後のニックネームを記入してください。",
+            })}
+          />
         </FormControl>
       </Modal>
     </>

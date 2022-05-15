@@ -1,0 +1,6 @@
+mutation RemoveGym($gymId: ID!) {
+  removeGym(gymId: $gymId) {
+    status
+    message
+  }
+}

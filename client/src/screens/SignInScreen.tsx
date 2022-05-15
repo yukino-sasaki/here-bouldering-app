@@ -1,5 +1,6 @@
-import { Button, FormControl, FormLabel, Input } from "@chakra-ui/react";
+import { Box, Button, Text } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
+import { RegisterBlock } from "../components/RegisterBlock";
 import useFirebase from "../useFirebase";
 
 type FormData = {
@@ -8,8 +9,7 @@ type FormData = {
 };
 
 const SignInScreen = () => {
-  // TODO: google login is not practiced. it's not function
-  const { registerUser, handleSignIn } = useFirebase();
+  const { registerUser } = useFirebase();
 
   const {
     handleSubmit,
@@ -24,37 +24,22 @@ const SignInScreen = () => {
   };
 
   return (
-    <>
-      <div>sign in</div>
-      <Button onClick={handleSignIn}>googleでサインインする</Button>
-      <Button>メールアドレスでサインインする</Button>
+    <Box maxW={"60%"} mx="auto">
+      <Text fontWeight={"bold"} my="10" fontSize={"2xl"}>
+        新規登録
+      </Text>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <FormControl>
-          <FormLabel>メールアドレス</FormLabel>
-          <Input
-            {...register("email", {
-              required: "This is required",
-            })}
-          />
-        </FormControl>
-        <FormControl>
-          <FormLabel>パスワード</FormLabel>
-          <Input
-            {...register("password", {
-              required: "This is required",
-            })}
-          />
-        </FormControl>
+        <RegisterBlock navigatePass="/logIn" />
         <Button
           mt={4}
           colorScheme="teal"
           isLoading={isSubmitting}
           type="submit"
         >
-          Submit
+          サインインする
         </Button>
       </form>
-    </>
+    </Box>
   );
 };
 

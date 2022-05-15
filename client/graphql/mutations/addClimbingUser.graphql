@@ -1,0 +1,12 @@
+mutation AddClimbingUser($input: RegisterClimbingUserInput!) {
+  addClimbingUser(input: $input) {
+    status
+    message
+    gym {
+      gymId
+      climbingUser {
+        ...ClimbingUserParts
+      }
+    }
+  }
+}

@@ -9,8 +9,7 @@ const UserModelSchema = new Schema(
     email: { type: String, required: true },
     nickname: { type: String, required: true },
     avatarImage: { type: String, required: true },
-    startClimbingTime: { type: String, required: true },
-    finishClimbingTime: { type: String, required: true },
+    climbingTime: { type: Array },
     registerGyms: { type: Array },
   },
   { timestamps: true }

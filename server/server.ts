@@ -5,18 +5,16 @@ import express from "express";
 import { importSchema } from "graphql-import";
 import http from "http";
 import mongoose from "mongoose";
+import cron from "node-cron";
 import { authorization } from "./firebase";
+import { resetClimbingTime } from "./src/resetClimbingTime";
 import { resolvers } from "./src/resolvers";
-
 export type Context = {
   id: string;
   email?: string;
 };
 
-// type ContextFunction = (ctx: ExpressContext) => Promise<Context>;
-
 dotenv.config();
-console.log(process.env.DATABASE);
 const app = express();
 
 const db = async () => {
@@ -42,9 +40,12 @@ const schema = makeExecutableSchema({
   resolvers,
 });
 
+let authLink: any = "";
+
 const apolloServer = new ApolloServer({
   schema,
   context: async ({ req }): Promise<Context | null> => {
+    authLink = req.headers ? req.headers : "";
     const idToken = req.headers.authorization?.replace(/^Bearer /, "");
     if (!idToken) {
       throw new Error(`auth token is falsy. auth is ${req.headers}`);
@@ -77,4 +78,8 @@ app.listen(process.env.PORT, () => {
   console.log(
     `graphql server is ready at localhost:${process.env.PORT}${apolloServer.graphqlPath}`
   );
+});
+
+cron.schedule("0 0 0 * * *", async () => {
+  resetClimbingTime();
 });

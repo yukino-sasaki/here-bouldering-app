@@ -1,4 +1,4 @@
-import { Avatar, Button, Input } from "@chakra-ui/react";
+import { Avatar, Button, FormLabel, Input } from "@chakra-ui/react";
 import React, { useContext, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { ScrollMenu, VisibilityContext } from "react-horizontal-scrolling-menu";
@@ -70,7 +70,6 @@ const UserScreen = () => {
     "teal.500",
     "red.500",
     "orange.500",
-    "gray.500",
     "yellow.500",
     "green.500",
     "blue.500",
@@ -94,15 +93,14 @@ const UserScreen = () => {
               />
             ))}
           </ScrollMenu>
-          <p>ニックネームを入れてください</p>
+          <FormLabel>ニックネームを入れてください</FormLabel>
           <Input
             id="nickname"
             {...register("nickname", {
               required: "This is required",
-              minLength: { value: 4, message: "Minimum length should be 4" },
             })}
           />
-          <Button type="submit" isLoading={isSubmitting}>
+          <Button type="submit" isLoading={isSubmitting} colorScheme="blue">
             ユーザーを作成する
           </Button>
         </form>
