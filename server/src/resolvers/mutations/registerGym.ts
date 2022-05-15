@@ -1,5 +1,4 @@
 import { MutateStatus, MutationResolvers } from "../../generated/graphql";
-import Gym from "../../models/gyms";
 import User from "../../models/user";
 
 export const registerGym: MutationResolvers["registerGym"] = async (
@@ -41,15 +40,16 @@ export const registerGym: MutationResolvers["registerGym"] = async (
     }
   );
 
-  await Gym.findOneAndUpdate(
-    { gymId: GymInput.gymId },
-    {
-      $push: {
-        climbingUser: me,
-      },
-    },
-    { new: true }
-  );
+  console.log(me);
+  // await Gym.findOneAndUpdate(
+  //   { gymId: GymInput.gymId },
+  //   {
+  //     $push: {
+  //       climbingUser: me,
+  //     },
+  //   },
+  //   { new: true }
+  // );
 
   return {
     registerGyms: me?.registerGyms,

@@ -1,6 +1,6 @@
 import {
   Button,
-  Menu as MenuRNE,
+  Menu as MenuBlock,
   MenuButton,
   MenuItem,
   MenuList,
@@ -9,19 +9,25 @@ import React from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 
 type Props = {
-  onClick: () => void;
-  menuItem: string;
+  menuItem: {
+    onClick: () => void;
+    title: string;
+  }[];
 };
 
-export const Menu: React.FC<Props> = ({ onClick, menuItem }) => {
+export const Menu: React.FC<Props> = ({ menuItem }) => {
   return (
-    <MenuRNE>
+    <MenuBlock>
       <MenuButton as={Button}>
         <BsThreeDotsVertical />
       </MenuButton>
-      <MenuList>
-        <MenuItem onClick={onClick}>{menuItem}</MenuItem>
-      </MenuList>
-    </MenuRNE>
+      {menuItem.map(({ title, onClick }, index) => {
+        return (
+          <MenuList key={index}>
+            <MenuItem onClick={onClick}>{title}</MenuItem>
+          </MenuList>
+        );
+      })}
+    </MenuBlock>
   );
 };

@@ -10,7 +10,8 @@ export const resetClimbingUser: MutationResolvers["resetClimbingUser"] =
         $set: {
           climbingTime: [],
         },
-      }
+      },
+      { multi: true }
     );
     console.log(res);
     const gym = await Gym.updateMany(
@@ -20,7 +21,8 @@ export const resetClimbingUser: MutationResolvers["resetClimbingUser"] =
           "climbingUser.$[].finishClimbingTime": null,
           "climbingUser.$[].startClimbingTime": null,
         },
-      }
+      },
+      { multi: true }
     );
     console.log(res, gym);
     return {

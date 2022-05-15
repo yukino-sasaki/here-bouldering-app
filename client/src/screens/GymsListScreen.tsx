@@ -64,7 +64,7 @@ const GymsListScreen = () => {
             data: {
               me: {
                 ...existMe,
-                registerGyms: [...existRegisterGyms, newRegisterGyms],
+                registerGyms: newRegisterGyms,
               },
             },
           });
@@ -99,9 +99,9 @@ const GymsListScreen = () => {
         {gyms &&
           gyms.map((gym, index) => {
             return (
-              <div key={index}>
+              <Box key={index}>
                 <Box bg="white" height="112px" p="2" borderRadius="md">
-                  <div className="flex justify-between h-27">
+                  <div className="flex justify-between">
                     <div>
                       <div className="flex-row justify-start">
                         <Text fontSize="4xl">{gym.name}</Text>
@@ -124,7 +124,7 @@ const GymsListScreen = () => {
                     </Button>
                   </div>
                 </Box>
-              </div>
+              </Box>
             );
           })}
       </SimpleGrid>

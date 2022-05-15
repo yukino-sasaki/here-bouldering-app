@@ -50,7 +50,7 @@ const HomeScreen = () => {
   const [unregisterGymMutation] = useUnregisterGymMutation();
   const { data, loading, error } = useMeQuery();
   const me = data?.me;
-
+  console.log(me);
   const createGym = useDisclosure();
   const userSetting = useDisclosure();
   const drawer = useDisclosure();
@@ -140,10 +140,15 @@ const HomeScreen = () => {
 
       <div className="bg-white w-full h-screen px-5 pt-8 relative">
         <Grid gap={5} templateColumns="repeat(4, 1fr)">
-          {registerGyms &&
+          {registerGyms.length !== 0 &&
             registerGyms.map((registerGym, i) => {
-              if (!registerGym) return <></>;
               const { name, place, gymId } = registerGym;
+              const menuItem = [
+                {
+                  title: "登録を解除",
+                  onClick: () => onClickUnregisterGym(gymId),
+                },
+              ];
               return gymId === "" ? (
                 <GridItem
                   w="100%"
@@ -180,10 +185,7 @@ const HomeScreen = () => {
                   <Flex>
                     <div className="px-3 leading-8">{place}</div>
                     <Spacer />
-                    <Menu
-                      menuItem="登録を解除"
-                      onClick={() => onClickUnregisterGym(gymId)}
-                    />
+                    <Menu menuItem={menuItem} />
                     {/* <Menu>
                       <MenuButton as={Button}>
                         <BsThreeDotsVertical />

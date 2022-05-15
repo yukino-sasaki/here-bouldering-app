@@ -5,11 +5,7 @@ mutation EditClimbingUser($input: EditClimbingTimeInput) {
     gym {
       gymId
       climbingUser {
-        userId
-        avatarImage
-        nickname
-        startClimbingTime
-        finishClimbingTime
+        ...ClimbingUserParts
       }
     }
   }

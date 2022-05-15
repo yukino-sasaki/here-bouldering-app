@@ -27,6 +27,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { FaTrashAlt } from "react-icons/fa";
 import { useLocation } from "react-router-dom";
 import { CreaterBlock } from "../components/CreaterBlock";
+import { Menu } from "../components/Menu";
 import { PlaceBlock } from "../components/PlaceBlock";
 import {
   GymDocument,
@@ -36,6 +37,7 @@ import {
   useEditClimbingUserMutation,
   useGymQuery,
   useMeQuery,
+  useRemoveClimbingUserMutation,
   useRemoveGymMutation,
 } from "../generated/graphql";
 import { useShowToast } from "../hooks/useShowToast";
@@ -53,6 +55,7 @@ const HereDetailScreen = () => {
   const [finishTime, setFinishTime] = useState<string>(
     format(nowDateTime, "HH:mm")
   );
+  const [climbingId, setClimbingId] = useState<string>();
 
   const { register, handleSubmit } = useForm<RegisterClimbingUserInput>();
 
@@ -61,6 +64,7 @@ const HereDetailScreen = () => {
   const [removeGymMutation] = useRemoveGymMutation();
   const [editClimbingUserMutation] = useEditClimbingUserMutation();
   const [addClimbingUserMutation] = useAddClimbingUserMutation();
+  const [removeClimbingUserMutation] = useRemoveClimbingUserMutation();
   const meQuery = useMeQuery();
   const GymQueryResponse = useGymQuery({ variables: { gymId } });
   const gym = GymQueryResponse.data?.gym;
@@ -106,10 +110,12 @@ const HereDetailScreen = () => {
         variables: {
           input: {
             gymId,
+            climbingId,
             startClimbingTime: climbingTimeInput(startClimbingTime),
             finishClimbingTime: climbingTimeInput(finishClimbingTime),
           },
         },
+        refetchQueries: [GymDocument],
       });
       showToast(response.data?.editClimbingUser);
     } else {
@@ -141,6 +147,20 @@ const HereDetailScreen = () => {
       console.log(response);
     } catch (error) {
       console.log(error);
+    }
+  };
+
+  const onClickRemoveClimbingUser = async (climbingId: string) => {
+    try {
+      const response = await removeClimbingUserMutation({
+        variables: {
+          climbingId,
+        },
+        refetchQueries: [GymDocument],
+      });
+      showToast(response.data?.removeClimbingUser);
+    } catch (error) {
+      throw new Error(`${error}`);
     }
   };
 
@@ -213,14 +233,30 @@ const HereDetailScreen = () => {
             avatarImage,
             finishClimbingTime,
             startClimbingTime,
+            climbingId,
           } = user;
+
+          const menuItem = [
+            {
+              title: "この予定を編集する",
+              onClick: () => {
+                setClimbingId(climbingId);
+                onOpen();
+              },
+            },
+            {
+              title: "この予定を削除する",
+              onClick: () => onClickRemoveClimbingUser(climbingId),
+            },
+          ];
+
           const ISOtoHourMin = (time?: string | null) => {
             if (!time) return null;
             const dt = new Date(time);
             return format(dt, "HH:mm");
           };
           return (
-            <Box key={index} mb="4">
+            <Box key={index} mb="4" onClick={() => setClimbingId(climbingId)}>
               <Flex>
                 <Avatar
                   bg={avatarImage as ResponsiveValue<Union<"current">>}
@@ -248,6 +284,8 @@ const HereDetailScreen = () => {
                     </Text>
                   </Flex>
                 </Box>
+                <Spacer />
+                <Menu menuItem={menuItem} />
               </Flex>
               <Divider color="#CBD5E0" mt="10px" />
             </Box>
@@ -276,7 +314,7 @@ const HereDetailScreen = () => {
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>
-            本日登り始める時間帯と帰る時間帯を入力してください！
+            本日登り始める時間帯と帰る時間帯を入力してください
           </ModalHeader>
           <ModalCloseButton />
           <form onSubmit={handleSubmit(onSubmit)}>

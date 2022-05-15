@@ -1,9 +1,7 @@
 mutation UnregisterGym($gymId: ID!) {
   unregisterGym(gymId: $gymId) {
     registerGyms {
-      name
-      place
-      gymId
+      ...RegisterGymParts
     }
     message
     status

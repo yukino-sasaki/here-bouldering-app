@@ -17,8 +17,9 @@ export type Scalars = {
 
 export type ClimbingTime = {
   __typename?: 'ClimbingTime';
+  climbingId: Scalars['ID'];
   finishClimbingTime?: Maybe<Scalars['String']>;
-  gymId?: Maybe<Scalars['ID']>;
+  gymId: Scalars['ID'];
   name: Scalars['String'];
   startClimbingTime?: Maybe<Scalars['String']>;
 };
@@ -26,6 +27,7 @@ export type ClimbingTime = {
 export type ClimbingUser = {
   __typename?: 'ClimbingUser';
   avatarImage: Scalars['String'];
+  climbingId: Scalars['ID'];
   finishClimbingTime?: Maybe<Scalars['String']>;
   nickname: Scalars['String'];
   startClimbingTime?: Maybe<Scalars['String']>;
@@ -53,6 +55,7 @@ export type CreaterInput = {
 };
 
 export type EditClimbingTimeInput = {
+  climbingId?: InputMaybe<Scalars['ID']>;
   finishClimbingTime?: InputMaybe<Scalars['String']>;
   gymId?: InputMaybe<Scalars['ID']>;
   startClimbingTime?: InputMaybe<Scalars['String']>;
@@ -156,7 +159,7 @@ export type MutationRegisterGymArgs = {
 
 
 export type MutationRemoveClimbingUserArgs = {
-  gymId: Scalars['ID'];
+  climbingId: Scalars['ID'];
 };
 
 
@@ -231,12 +234,16 @@ export type UserInput = {
   nickname: Scalars['String'];
 };
 
+export type ClimbingUserPartsFragment = { __typename?: 'ClimbingUser', userId: string, climbingId: string, nickname: string, avatarImage: string, finishClimbingTime?: string | null, startClimbingTime?: string | null };
+
+export type RegisterGymPartsFragment = { __typename?: 'GymInfo', name: string, place: string, gymId: string };
+
 export type AddClimbingUserMutationVariables = Exact<{
   input: RegisterClimbingUserInput;
 }>;
 
 
-export type AddClimbingUserMutation = { __typename?: 'Mutation', addClimbingUser?: { __typename?: 'ClimbingUserResponse', status: MutateStatus, message: string, gym?: { __typename?: 'Gym', gymId: string, climbingUser?: Array<{ __typename?: 'ClimbingUser', userId: string, avatarImage: string, nickname: string, startClimbingTime?: string | null, finishClimbingTime?: string | null } | null> | null } | null } | null };
+export type AddClimbingUserMutation = { __typename?: 'Mutation', addClimbingUser?: { __typename?: 'ClimbingUserResponse', status: MutateStatus, message: string, gym?: { __typename?: 'Gym', gymId: string, climbingUser?: Array<{ __typename?: 'ClimbingUser', userId: string, climbingId: string, nickname: string, avatarImage: string, finishClimbingTime?: string | null, startClimbingTime?: string | null } | null> | null } | null } | null };
 
 export type AddGymsMutationVariables = Exact<{
   name: Scalars['String'];
@@ -260,7 +267,7 @@ export type EditClimbingUserMutationVariables = Exact<{
 }>;
 
 
-export type EditClimbingUserMutation = { __typename?: 'Mutation', editClimbingUser?: { __typename?: 'ClimbingUserResponse', status: MutateStatus, message: string, gym?: { __typename?: 'Gym', gymId: string, climbingUser?: Array<{ __typename?: 'ClimbingUser', userId: string, avatarImage: string, nickname: string, startClimbingTime?: string | null, finishClimbingTime?: string | null } | null> | null } | null } | null };
+export type EditClimbingUserMutation = { __typename?: 'Mutation', editClimbingUser?: { __typename?: 'ClimbingUserResponse', status: MutateStatus, message: string, gym?: { __typename?: 'Gym', gymId: string, climbingUser?: Array<{ __typename?: 'ClimbingUser', userId: string, climbingId: string, nickname: string, avatarImage: string, finishClimbingTime?: string | null, startClimbingTime?: string | null } | null> | null } | null } | null };
 
 export type EditMeMutationVariables = Exact<{
   input: UserInput;
@@ -275,6 +282,13 @@ export type RegisterGymMutationVariables = Exact<{
 
 
 export type RegisterGymMutation = { __typename?: 'Mutation', registerGym?: { __typename?: 'RegisterGymResponse', message?: string | null, status: MutateStatus, registerGyms?: Array<{ __typename?: 'GymInfo', name: string, place: string, gymId: string } | null> | null } | null };
+
+export type RemoveClimbingUserMutationVariables = Exact<{
+  climbingId: Scalars['ID'];
+}>;
+
+
+export type RemoveClimbingUserMutation = { __typename?: 'Mutation', removeClimbingUser?: { __typename?: 'ClimbingUserResponse', status: MutateStatus, message: string } | null };
 
 export type RemoveGymMutationVariables = Exact<{
   gymId: Scalars['ID'];
@@ -295,7 +309,7 @@ export type GymQueryVariables = Exact<{
 }>;
 
 
-export type GymQuery = { __typename?: 'Query', gym?: { __typename?: 'Gym', gymId: string, name: string, place: string, creater: { __typename?: 'Creater', userId: string, nickname: string, avatarImage: string }, climbingUser?: Array<{ __typename?: 'ClimbingUser', userId: string, nickname: string, avatarImage: string, finishClimbingTime?: string | null, startClimbingTime?: string | null } | null> | null } | null };
+export type GymQuery = { __typename?: 'Query', gym?: { __typename?: 'Gym', gymId: string, name: string, place: string, creater: { __typename?: 'Creater', userId: string, nickname: string, avatarImage: string }, climbingUser?: Array<{ __typename?: 'ClimbingUser', userId: string, climbingId: string, nickname: string, avatarImage: string, finishClimbingTime?: string | null, startClimbingTime?: string | null } | null> | null } | null };
 
 export type GymsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -305,9 +319,25 @@ export type GymsQuery = { __typename?: 'Query', gyms: Array<{ __typename?: 'Gym'
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'Me', userId: string, avatarImage: string, nickname: string, climbingTime?: Array<{ __typename?: 'ClimbingTime', gymId?: string | null, finishClimbingTime?: string | null, startClimbingTime?: string | null } | null> | null, registerGyms: Array<{ __typename?: 'GymInfo', name: string, place: string, gymId: string }> } | null };
+export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'Me', userId: string, avatarImage: string, nickname: string, climbingTime?: Array<{ __typename?: 'ClimbingTime', gymId: string, finishClimbingTime?: string | null, startClimbingTime?: string | null } | null> | null, registerGyms: Array<{ __typename?: 'GymInfo', name: string, place: string, gymId: string }> } | null };
 
-
+export const ClimbingUserPartsFragmentDoc = gql`
+    fragment ClimbingUserParts on ClimbingUser {
+  userId
+  climbingId
+  nickname
+  avatarImage
+  finishClimbingTime
+  startClimbingTime
+}
+    `;
+export const RegisterGymPartsFragmentDoc = gql`
+    fragment RegisterGymParts on GymInfo {
+  name
+  place
+  gymId
+}
+    `;
 export const AddClimbingUserDocument = gql`
     mutation AddClimbingUser($input: RegisterClimbingUserInput!) {
   addClimbingUser(input: $input) {
@@ -316,16 +346,12 @@ export const AddClimbingUserDocument = gql`
     gym {
       gymId
       climbingUser {
-        userId
-        avatarImage
-        nickname
-        startClimbingTime
-        finishClimbingTime
+        ...ClimbingUserParts
       }
     }
   }
 }
-    `;
+    ${ClimbingUserPartsFragmentDoc}`;
 export type AddClimbingUserMutationFn = Apollo.MutationFunction<AddClimbingUserMutation, AddClimbingUserMutationVariables>;
 
 /**
@@ -441,16 +467,12 @@ export const EditClimbingUserDocument = gql`
     gym {
       gymId
       climbingUser {
-        userId
-        avatarImage
-        nickname
-        startClimbingTime
-        finishClimbingTime
+        ...ClimbingUserParts
       }
     }
   }
 }
-    `;
+    ${ClimbingUserPartsFragmentDoc}`;
 export type EditClimbingUserMutationFn = Apollo.MutationFunction<EditClimbingUserMutation, EditClimbingUserMutationVariables>;
 
 /**
@@ -519,15 +541,13 @@ export const RegisterGymDocument = gql`
     mutation RegisterGym($GymInput: GymInput) {
   registerGym(GymInput: $GymInput) {
     registerGyms {
-      name
-      place
-      gymId
+      ...RegisterGymParts
     }
     message
     status
   }
 }
-    `;
+    ${RegisterGymPartsFragmentDoc}`;
 export type RegisterGymMutationFn = Apollo.MutationFunction<RegisterGymMutation, RegisterGymMutationVariables>;
 
 /**
@@ -554,6 +574,40 @@ export function useRegisterGymMutation(baseOptions?: Apollo.MutationHookOptions<
 export type RegisterGymMutationHookResult = ReturnType<typeof useRegisterGymMutation>;
 export type RegisterGymMutationResult = Apollo.MutationResult<RegisterGymMutation>;
 export type RegisterGymMutationOptions = Apollo.BaseMutationOptions<RegisterGymMutation, RegisterGymMutationVariables>;
+export const RemoveClimbingUserDocument = gql`
+    mutation RemoveClimbingUser($climbingId: ID!) {
+  removeClimbingUser(climbingId: $climbingId) {
+    status
+    message
+  }
+}
+    `;
+export type RemoveClimbingUserMutationFn = Apollo.MutationFunction<RemoveClimbingUserMutation, RemoveClimbingUserMutationVariables>;
+
+/**
+ * __useRemoveClimbingUserMutation__
+ *
+ * To run a mutation, you first call `useRemoveClimbingUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveClimbingUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removeClimbingUserMutation, { data, loading, error }] = useRemoveClimbingUserMutation({
+ *   variables: {
+ *      climbingId: // value for 'climbingId'
+ *   },
+ * });
+ */
+export function useRemoveClimbingUserMutation(baseOptions?: Apollo.MutationHookOptions<RemoveClimbingUserMutation, RemoveClimbingUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<RemoveClimbingUserMutation, RemoveClimbingUserMutationVariables>(RemoveClimbingUserDocument, options);
+      }
+export type RemoveClimbingUserMutationHookResult = ReturnType<typeof useRemoveClimbingUserMutation>;
+export type RemoveClimbingUserMutationResult = Apollo.MutationResult<RemoveClimbingUserMutation>;
+export type RemoveClimbingUserMutationOptions = Apollo.BaseMutationOptions<RemoveClimbingUserMutation, RemoveClimbingUserMutationVariables>;
 export const RemoveGymDocument = gql`
     mutation RemoveGym($gymId: ID!) {
   removeGym(gymId: $gymId) {
@@ -592,15 +646,13 @@ export const UnregisterGymDocument = gql`
     mutation UnregisterGym($gymId: ID!) {
   unregisterGym(gymId: $gymId) {
     registerGyms {
-      name
-      place
-      gymId
+      ...RegisterGymParts
     }
     message
     status
   }
 }
-    `;
+    ${RegisterGymPartsFragmentDoc}`;
 export type UnregisterGymMutationFn = Apollo.MutationFunction<UnregisterGymMutation, UnregisterGymMutationVariables>;
 
 /**
@@ -639,15 +691,11 @@ export const GymDocument = gql`
       avatarImage
     }
     climbingUser {
-      userId
-      nickname
-      avatarImage
-      finishClimbingTime
-      startClimbingTime
+      ...ClimbingUserParts
     }
   }
 }
-    `;
+    ${ClimbingUserPartsFragmentDoc}`;
 
 /**
  * __useGymQuery__

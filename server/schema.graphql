@@ -9,6 +9,7 @@ type User {
 
 type ClimbingUser {
   userId: ID!
+  climbingId: ID!
   nickname: String!
   avatarImage: String!
   startClimbingTime: String
@@ -16,7 +17,8 @@ type ClimbingUser {
 }
 
 type ClimbingTime {
-  gymId: ID
+  gymId: ID!
+  climbingId: ID!
   name: String!
   startClimbingTime: String
   finishClimbingTime: String
@@ -117,6 +119,8 @@ input UserInput {
 
 input EditClimbingTimeInput {
   gymId: ID
+  # 登るときに作成される
+  climbingId: ID
   startClimbingTime: String
   finishClimbingTime: String
 }
@@ -137,6 +141,6 @@ type Mutation {
   editMe(input: UserInput!): MeResponse
   addClimbingUser(input: RegisterClimbingUserInput!): ClimbingUserResponse
   editClimbingUser(input: EditClimbingTimeInput): ClimbingUserResponse
-  removeClimbingUser(gymId: ID!): ClimbingUserResponse # ジムに登っているユーザーをユーザーが削除できるようにする
+  removeClimbingUser(climbingId: ID!): ClimbingUserResponse # ジムに登っているユーザーをユーザーが削除できるようにする
   resetClimbingUser: ResetClimbingUserResponse
 }

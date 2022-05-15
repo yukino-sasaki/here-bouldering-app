@@ -16,8 +16,7 @@ export const resetClimbingTime = async () => {
     {},
     {
       $set: {
-        "climbingUser.$[].finishClimbingTime": null,
-        "climbingUser.$[].startClimbingTime": null,
+        climbingUser: [],
       },
     },
     {

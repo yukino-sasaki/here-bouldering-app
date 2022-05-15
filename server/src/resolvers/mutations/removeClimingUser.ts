@@ -3,31 +3,38 @@ import Gym from "../../models/gyms";
 import User from "../../models/user";
 
 export const removeClimbingUser: MutationResolvers["removeClimbingUser"] =
-  async (_, { gymId }, { id }) => {
+  async (_, { climbingId }, { id }) => {
     const removeClimbingUser = await Gym.findOneAndUpdate(
       {
-        gymId,
-        climbingUser: { userId: id },
+        climbingUser: {
+          $elemMatch: {
+            climbingId,
+          },
+        },
       },
       {
-        $set: {
-          "climbingUser.finishClimbingTime": null,
-          "climbingUser.startClimbingTime": null,
+        $pull: {
+          climbingUser: { climbingId },
         },
       },
       {
         new: true,
       }
     );
+    console.log(climbingId, removeClimbingUser);
 
     await User.findOneAndUpdate(
       {
         userId: id,
-        climbingTime: { gymId },
+        climbingTime: {
+          $elemMatch: {
+            climbingId,
+          },
+        },
       },
       {
         $pull: {
-          climbingTime: { gymId },
+          climbingTime: { climbingId },
         },
       },
       {

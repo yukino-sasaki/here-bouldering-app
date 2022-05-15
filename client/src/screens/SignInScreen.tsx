@@ -1,5 +1,6 @@
-import { Box, Button, FormControl, FormLabel, Input } from "@chakra-ui/react";
+import { Box, Button, Text } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
+import { RegisterBlock } from "../components/RegisterBlock";
 import useFirebase from "../useFirebase";
 
 type FormData = {
@@ -8,7 +9,6 @@ type FormData = {
 };
 
 const SignInScreen = () => {
-  // TODO: google login is not practiced. it's not function
   const { registerUser } = useFirebase();
 
   const {
@@ -24,29 +24,12 @@ const SignInScreen = () => {
   };
 
   return (
-    <Box maxW={"60%"} m="auto">
-      <Button>メールアドレスでサインインする</Button>
+    <Box maxW={"60%"} mx="auto">
+      <Text fontWeight={"bold"} my="10" fontSize={"2xl"}>
+        新規登録
+      </Text>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <FormControl>
-          <FormLabel>メールアドレス</FormLabel>
-          <Input
-            variant="flushed"
-            placeholder="xxxxxx@gmail.com"
-            {...register("email", {
-              required: "This is required",
-            })}
-          />
-        </FormControl>
-        <FormControl>
-          <FormLabel>パスワード</FormLabel>
-          <Input
-            placeholder="password"
-            variant="flushed"
-            {...register("password", {
-              required: "This is required",
-            })}
-          />
-        </FormControl>
+        <RegisterBlock navigatePass="/logIn" />
         <Button
           mt={4}
           colorScheme="teal"

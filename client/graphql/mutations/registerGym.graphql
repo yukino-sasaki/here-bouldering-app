@@ -1,9 +1,7 @@
 mutation RegisterGym($GymInput: GymInput) {
   registerGym(GymInput: $GymInput) {
     registerGyms {
-      name
-      place
-      gymId
+      ...RegisterGymParts
     }
     message
     status

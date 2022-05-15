@@ -5,11 +5,7 @@ mutation AddClimbingUser($input: RegisterClimbingUserInput!) {
     gym {
       gymId
       climbingUser {
-        userId
-        avatarImage
-        nickname
-        startClimbingTime
-        finishClimbingTime
+        ...ClimbingUserParts
       }
     }
   }

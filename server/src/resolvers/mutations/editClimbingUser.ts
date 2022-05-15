@@ -13,7 +13,7 @@ export const editClimbingUser: MutationResolvers["editClimbingUser"] = async (
       message: "更新できませんんでした",
       status: MutateStatus.Error,
     };
-  const { gymId, finishClimbingTime, startClimbingTime } = input;
+  const { gymId, finishClimbingTime, startClimbingTime, climbingId } = input;
 
   let editClimbingUser;
   if (startClimbingTime) {
@@ -23,6 +23,7 @@ export const editClimbingUser: MutationResolvers["editClimbingUser"] = async (
         climbingUser: {
           $elemMatch: {
             userId: id,
+            climbingId,
           },
         },
       },
@@ -38,7 +39,7 @@ export const editClimbingUser: MutationResolvers["editClimbingUser"] = async (
       }
     );
 
-    console.log(editClimbingUser);
+    console.log(climbingId, editClimbingUser);
 
     await User.findOneAndUpdate(
       {
@@ -46,6 +47,7 @@ export const editClimbingUser: MutationResolvers["editClimbingUser"] = async (
         climbingTime: {
           $elemMatch: {
             gymId,
+            climbingId,
           },
         },
       },
@@ -66,6 +68,7 @@ export const editClimbingUser: MutationResolvers["editClimbingUser"] = async (
         climbingUser: {
           $elemMatch: {
             userId: id,
+            climbingId,
           },
         },
       },
@@ -80,14 +83,13 @@ export const editClimbingUser: MutationResolvers["editClimbingUser"] = async (
       }
     );
 
-    console.log(editClimbingUser);
-
     await User.findOneAndUpdate(
       {
         userId: id,
         climbingTime: {
           $elemMatch: {
             gymId,
+            climbingId,
           },
         },
       },

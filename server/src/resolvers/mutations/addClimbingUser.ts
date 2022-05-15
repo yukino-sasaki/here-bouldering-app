@@ -1,3 +1,4 @@
+import { nanoid } from "nanoid";
 import { MutateStatus, MutationResolvers } from "../../generated/graphql";
 import Gym from "../../models/gyms";
 import User from "../../models/user";
@@ -7,9 +8,15 @@ export const addClimbingUser: MutationResolvers["addClimbingUser"] = async (
   { input },
   { id }
 ) => {
+  // const { ObjectId } = Types;
   const { gymId, name, ...registerClimbingUserInput } = input;
   const { finishClimbingTime, startClimbingTime } = registerClimbingUserInput;
-  console.log(registerClimbingUserInput);
+  const climbingId = nanoid();
+  const registerClimbingUser = {
+    climbingId,
+    ...registerClimbingUserInput,
+  };
+  console.log(registerClimbingUser);
 
   const meInfo = await User.findOne({
     userId: id,
@@ -37,7 +44,6 @@ export const addClimbingUser: MutationResolvers["addClimbingUser"] = async (
       );
     }
   );
-  console.log("check", checkClimbingTime);
 
   if (checkClimbingTime)
     return {
@@ -52,7 +58,7 @@ export const addClimbingUser: MutationResolvers["addClimbingUser"] = async (
     },
     {
       $push: {
-        climbingUser: registerClimbingUserInput,
+        climbingUser: registerClimbingUser,
       },
     },
     {
@@ -68,6 +74,7 @@ export const addClimbingUser: MutationResolvers["addClimbingUser"] = async (
       $push: {
         climbingTime: {
           gymId,
+          climbingId,
           name,
           startClimbingTime,
           finishClimbingTime,

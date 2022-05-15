@@ -1,0 +1,8 @@
+fragment ClimbingUserParts on ClimbingUser {
+  userId
+  climbingId
+  nickname
+  avatarImage
+  finishClimbingTime
+  startClimbingTime
+}
