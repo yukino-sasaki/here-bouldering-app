@@ -55,6 +55,7 @@ const useFirebase = () => {
 
   const logout = async () => {
     await signOut(auth);
+    navigate("/logIn");
   };
   return {
     auth,

@@ -1,19 +1,18 @@
 import { Box, Button, Text } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { RegisterBlock } from "../components/RegisterBlock";
-import useFirebase from "../useFirebase";
+import useFirebase from "../firebase/useFirebase";
 
 type FormData = {
   email: string;
   password: string;
 };
 
-const SignInScreen = () => {
+const SigninScreen = () => {
   const { registerUser } = useFirebase();
 
   const {
     handleSubmit,
-    register,
     formState: { errors, isSubmitting },
   } = useForm<FormData>();
 
@@ -43,4 +42,4 @@ const SignInScreen = () => {
   );
 };
 
-export default SignInScreen;
+export default SigninScreen;

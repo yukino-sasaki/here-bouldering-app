@@ -23,6 +23,7 @@ import { HiOutlineMenu } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
 import { Menu } from "../components/Menu";
 import { Modal } from "../components/Modal";
+import useFirebase from "../firebase/useFirebase";
 import {
   MeDocument,
   useAddGymsMutation,
@@ -44,6 +45,7 @@ const HomeScreen = () => {
   const { register: editMeRegister, handleSubmit: editMeHandleSubmit } =
     useForm<UserInput>();
 
+  const { logout } = useFirebase();
   const { showToast } = useShowToast();
   const [addGymsMutation] = useAddGymsMutation();
   const [editMeMutation] = useEditMeMutation();
@@ -139,7 +141,14 @@ const HomeScreen = () => {
       </div>
 
       <div className="bg-white w-full h-screen px-5 pt-8 relative">
-        <Grid gap={5} templateColumns="repeat(4, 1fr)">
+        <Grid
+          gap={5}
+          templateColumns={[
+            "repeat(1, 1fr)",
+            "repeat(2, 1fr)",
+            "repeat(4, 1fr)",
+          ]}
+        >
           {registerGyms.length !== 0 &&
             registerGyms.map((registerGym, i) => {
               const { name, place, gymId } = registerGym;
@@ -186,16 +195,6 @@ const HomeScreen = () => {
                     <div className="px-3 leading-8">{place}</div>
                     <Spacer />
                     <Menu menuItem={menuItem} />
-                    {/* <Menu>
-                      <MenuButton as={Button}>
-                        <BsThreeDotsVertical />
-                      </MenuButton>
-                      <MenuList>
-                        <MenuItem onClick={() => onClickUnregisterGym(gymId)}>
-                          登録を解除
-                        </MenuItem>
-                      </MenuList>
-                    </Menu> */}
                   </Flex>
                 </GridItem>
               );
@@ -210,7 +209,7 @@ const HomeScreen = () => {
         >
           <div className="bg-menuBg z-50 h-screen absolute top-0 left-0">
             <DrawerCloseButton color="white" />
-            <DrawerHeader color="white">設定</DrawerHeader>
+            <DrawerHeader color="white">メニュー</DrawerHeader>
             <DrawerBody>
               <Button
                 colorScheme="white"
@@ -232,6 +231,9 @@ const HomeScreen = () => {
                 onClick={() => navigate("/gymsList")}
               >
                 ジムをダッシュボードに登録する
+              </Button>
+              <Button colorScheme="white" isFullWidth onClick={() => logout()}>
+                ログアウト
               </Button>
             </DrawerBody>
           </div>
