@@ -1,9 +1,11 @@
 import {
   Button,
+  Icon,
   Menu as MenuBlock,
   MenuButton,
   MenuItem,
   MenuList,
+  StyleProps,
 } from "@chakra-ui/react";
 import React from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
@@ -13,21 +15,24 @@ type Props = {
     onClick: () => void;
     title: string;
   }[];
-};
+} & StyleProps;
 
-export const Menu: React.FC<Props> = ({ menuItem }) => {
+export const Menu: React.FC<Props> = (props) => {
+  const { menuItem, ...styleProps } = props;
   return (
     <MenuBlock>
-      <MenuButton as={Button}>
-        <BsThreeDotsVertical />
+      <MenuButton as={Button} bg="white">
+        <Icon as={BsThreeDotsVertical} {...styleProps} />
       </MenuButton>
-      {menuItem.map(({ title, onClick }, index) => {
-        return (
-          <MenuList key={index}>
-            <MenuItem onClick={onClick}>{title}</MenuItem>
-          </MenuList>
-        );
-      })}
+      <MenuList>
+        {menuItem.map(({ title, onClick }, index) => {
+          return (
+            <MenuItem key={index} onClick={onClick}>
+              {title}
+            </MenuItem>
+          );
+        })}
+      </MenuList>
     </MenuBlock>
   );
 };

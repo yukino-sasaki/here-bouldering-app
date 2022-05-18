@@ -1,18 +1,19 @@
 import { FormControl, FormLabel, Input, Text } from "@chakra-ui/react";
-import { useForm } from "react-hook-form";
+import { UseFormRegister } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
 type Props = {
   navigatePass: "/signIn" | "/logIn";
+  register: UseFormRegister<FormData>;
 };
 
 type FormData = {
   email: string;
   password: string;
 };
-export const RegisterBlock: React.FC<Props> = ({ navigatePass }) => {
+
+export const RegisterBlock: React.FC<Props> = ({ navigatePass, register }) => {
   const navigate = useNavigate();
-  const { register } = useForm<FormData>();
 
   return (
     <>

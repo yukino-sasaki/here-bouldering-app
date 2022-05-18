@@ -45,6 +45,7 @@ const useFirebase = () => {
           // Signed in
           const userResponse = userCredential.user;
           setUserData(userResponse);
+          console.log(loginEmail);
           navigate("/", { state: { userData } });
         }
       );

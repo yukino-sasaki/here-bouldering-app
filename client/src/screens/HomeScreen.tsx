@@ -1,5 +1,6 @@
 import {
   Avatar,
+  Box,
   Button,
   Center,
   Drawer,
@@ -118,29 +119,33 @@ const HomeScreen = () => {
 
   return (
     <>
-      <div className="bg-darkgray flex-col justify-between h-16 flex">
-        <div className="flex flex-row justify-between px-8">
-          <Icon
-            as={HiOutlineMenu}
-            color="white"
-            w={8}
-            h={8}
-            my="auto"
-            onClick={drawer.onOpen}
-          />
-          <h2 className="text-3xl text-white h-9 my-auto">Here!Bouldering!</h2>
-          <div className="w-28">
-            <div className="flex flex-row justify-center">
-              <Avatar bg={avatarImage} size="sm" />
-            </div>
-            <Text color="white" fontSize="sm" align="center">
-              {nickname}
+      <Box bg="headerBg" h="16">
+        <Flex direction={"column"} justifyContent="space-between">
+          <Flex justify="space-between" px="8">
+            <Icon
+              as={HiOutlineMenu}
+              color="white"
+              w={8}
+              h={8}
+              my="auto"
+              onClick={drawer.onOpen}
+            />
+            <Text fontSize={"3xl"} color="white">
+              Here!Bouldering!
             </Text>
-          </div>
-        </div>
-      </div>
+            <Box>
+              <Flex justify={"center"}>
+                <Avatar bg={avatarImage} size="sm" />
+              </Flex>
+              <Text color="white" fontSize="sm" align="center">
+                {nickname}
+              </Text>
+            </Box>
+          </Flex>
+        </Flex>
+      </Box>
 
-      <div className="bg-white w-full h-screen px-5 pt-8 relative">
+      <div className="bg-white w-full min-h-screen px-5 pt-8 relative">
         <Grid
           gap={5}
           templateColumns={[
@@ -191,10 +196,16 @@ const HomeScreen = () => {
                   >
                     <div className="text-white text-2xl">{name}</div>
                   </Center>
-                  <Flex>
-                    <div className="px-3 leading-8">{place}</div>
+                  <Flex
+                    align={"center"}
+                    bg="white"
+                    h="10"
+                    borderBottomRadius={"md"}
+                    pl="1"
+                  >
+                    <Text>{place}</Text>
                     <Spacer />
-                    <Menu menuItem={menuItem} />
+                    <Menu menuItem={menuItem} borderBottomRightRadius="md" />
                   </Flex>
                 </GridItem>
               );
@@ -273,7 +284,6 @@ const HomeScreen = () => {
         onClose={userSetting.onClose}
         header={"ユーザー名を変更する"}
         submit="変更する"
-        // templary
         handleSubmit={editMeHandleSubmit}
         onSubmit={editMeSubmit}
       >

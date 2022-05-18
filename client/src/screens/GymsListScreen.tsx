@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Flex,
   Icon,
   SimpleGrid,
   Text,
@@ -57,7 +58,6 @@ const GymsListScreen = () => {
             variables: null,
           });
           const existMe = meQuery?.me;
-          const existRegisterGyms = existMe?.registerGyms ?? [];
           console.log("exist", meQuery);
           cache.writeQuery({
             query: MeDocument,
@@ -94,36 +94,44 @@ const GymsListScreen = () => {
 
   if (!gyms) return <></>;
   return (
-    <div className="p-5 bg-white h-screen">
+    <div className="p-5 bg-white min-h-screen">
+      <Text fontSize={"2xl"} mb="10" fontWeight="bold">
+        作成されたジム一覧
+      </Text>
       <SimpleGrid column={1} spacing={1} maxW="600px" m="auto">
         {gyms &&
           gyms.map((gym, index) => {
             return (
-              <Box key={index}>
-                <Box bg="white" height="112px" p="2" borderRadius="md">
-                  <div className="flex justify-between">
-                    <div>
-                      <div className="flex-row justify-start">
-                        <Text fontSize="4xl">{gym.name}</Text>
-                        <div className="flex flex-row justify-start">
-                          <Icon as={MdPlace} w={6} h={6} />
-                          <Text fontSize="lg">{gym.place}</Text>
-                        </div>
-                      </div>
-                      <CreaterBlock
-                        nickname={gym?.creater.nickname}
-                        avatarImage={gym.creater.avatarImage}
-                      />
-                    </div>
-                    <Button
-                      colorScheme="blue"
-                      my="auto"
-                      onClick={() => registerGym(gym)}
-                    >
-                      登録する
-                    </Button>
+              <Box
+                bg="white"
+                p="4"
+                borderRadius="lg"
+                key={index}
+                mb="4"
+                boxShadow="md"
+              >
+                <Flex justifyContent={"space-between"}>
+                  <div>
+                    <Flex mb="5">
+                      <Text fontSize="2xl">{gym.name}</Text>
+                      <Flex>
+                        <Icon as={MdPlace} w={6} h={6} />
+                        <Text fontSize="lg">{gym.place}</Text>
+                      </Flex>
+                    </Flex>
+                    <CreaterBlock
+                      nickname={gym?.creater.nickname}
+                      avatarImage={gym.creater.avatarImage}
+                    />
                   </div>
-                </Box>
+                  <Button
+                    colorScheme="blue"
+                    my="auto"
+                    onClick={() => registerGym(gym)}
+                  >
+                    登録する
+                  </Button>
+                </Flex>
               </Box>
             );
           })}

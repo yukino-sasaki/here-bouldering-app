@@ -1,4 +1,4 @@
-import { Avatar, Button, FormLabel, Input } from "@chakra-ui/react";
+import { Avatar, Button, FormLabel, Input, Text } from "@chakra-ui/react";
 import React, { useContext, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { ScrollMenu, VisibilityContext } from "react-horizontal-scrolling-menu";
@@ -78,33 +78,43 @@ const UserScreen = () => {
     "pink.500",
   ];
   return (
-    <div className="flex items-center h-screen">
-      <div className="w-72 h-80 m-auto">
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <p>アイコンを選択してください</p>
-          <ScrollMenu LeftArrow={LeftArrow} RightArrow={RightArrow}>
-            {avatarBg.map((bg, i) => (
-              <Avatar
-                key={i}
-                bg={bg}
-                size="2xl"
-                mr="4"
-                onClick={() => setSelectAvatarImage(bg)}
-              />
-            ))}
-          </ScrollMenu>
-          <FormLabel>ニックネームを入れてください</FormLabel>
-          <Input
-            id="nickname"
-            {...register("nickname", {
-              required: "This is required",
-            })}
-          />
-          <Button type="submit" isLoading={isSubmitting} colorScheme="blue">
-            ユーザーを作成する
-          </Button>
-        </form>
-      </div>
+    <div className="w-72 h-80 m-auto">
+      <Text fontWeight={"bold"} my={["20px", "36px"]} fontSize="2xl">
+        プロフィール設定
+      </Text>
+      <Text my="12px">アイコンを選択してください</Text>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <ScrollMenu LeftArrow={LeftArrow} RightArrow={RightArrow}>
+          {avatarBg.map((bg, i) => (
+            <Avatar
+              key={i}
+              bg={bg}
+              size="2xl"
+              mr="4"
+              borderColor={selectAvatarImage === bg ? "blue.200" : undefined}
+              borderWidth={selectAvatarImage === bg ? "4px" : undefined}
+              onClick={() => setSelectAvatarImage(bg)}
+            />
+          ))}
+        </ScrollMenu>
+        <FormLabel mt="36px" mb="12px">
+          ニックネームを入れてください
+        </FormLabel>
+        <Input
+          id="nickname"
+          {...register("nickname", {
+            required: "ニックネームは必須です！",
+          })}
+        />
+        <Button
+          type="submit"
+          isLoading={isSubmitting}
+          colorScheme="blue"
+          mt="20px"
+        >
+          ユーザーを作成する
+        </Button>
+      </form>
     </div>
   );
 };

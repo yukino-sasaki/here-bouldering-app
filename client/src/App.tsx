@@ -17,14 +17,13 @@ import LogInScreen from "./screens/LoginScreen";
 import SigninScreen from "./screens/SigninScreen";
 import UserScreen from "./screens/UserScreen";
 
-// 2. Call `extendTheme` and pass your custom values
 const theme = extendTheme({
   colors: {
     background: "#F0F0F2",
     whitegray: "#D7D7D9",
-    ligntgray: "#A6A6A6",
-    gray: "#585859",
-    darkgray: "#3F3F40",
+    lightgray: "#A6A6A6",
+    menuBg: "#585859",
+    headerBg: "#3F3F40",
   },
 });
 

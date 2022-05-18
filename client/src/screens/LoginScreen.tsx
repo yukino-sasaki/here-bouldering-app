@@ -13,12 +13,13 @@ const LogInScreen = () => {
 
   const {
     handleSubmit,
+    register,
     formState: { errors, isSubmitting },
   } = useForm<FormData>();
 
-  const onSubmit = (value: { email: string; password: string }) => {
+  const onSubmit = async (value: { email: string; password: string }) => {
     const { email, password } = value;
-    login(email, password);
+    await login(email, password);
   };
   return (
     <Box maxW={"60%"} mx="auto">
@@ -27,7 +28,7 @@ const LogInScreen = () => {
       </Text>
 
       <form onSubmit={handleSubmit(onSubmit)}>
-        <RegisterBlock navigatePass="/signIn" />
+        <RegisterBlock navigatePass="/signIn" register={register} />
         <Button
           mt={4}
           colorScheme="teal"

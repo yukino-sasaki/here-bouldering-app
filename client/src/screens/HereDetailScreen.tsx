@@ -6,7 +6,6 @@ import {
   Center,
   Divider,
   Flex,
-  Icon,
   Input,
   Modal,
   ModalBody,
@@ -29,6 +28,7 @@ import { useLocation } from "react-router-dom";
 import { CreaterBlock } from "../components/CreaterBlock";
 import { Menu } from "../components/Menu";
 import { PlaceBlock } from "../components/PlaceBlock";
+import { Popover } from "../components/Popover";
 import {
   GymDocument,
   MeDocument,
@@ -48,6 +48,7 @@ const HereDetailScreen = () => {
   const { gymId } = location.state as { gymId: string };
   const nowDateTime = new Date();
   const now = nowDateTime.getHours() * 3600 + nowDateTime.getMinutes() * 60;
+  const screenHeight = window.innerHeight;
 
   const [startTime, setStartTime] = useState<string>(
     format(nowDateTime, "HH:mm")
@@ -171,6 +172,7 @@ const HereDetailScreen = () => {
       const response = await editClimbingUserMutation({
         variables: {
           input: {
+            climbingId,
             gymId,
             finishClimbingTime: returnTime,
           },
@@ -201,16 +203,26 @@ const HereDetailScreen = () => {
 
   return (
     <div className="mx-auto">
-      <Box maxW="760px" mx="auto">
+      <Box maxW="760px" mx="auto" pb="50">
         <Flex>
           <Text my="5" fontSize="4xl">
             {name}
           </Text>
           <Spacer />
           {me.userId === creater.userId && (
-            <Icon
-              as={FaTrashAlt}
+            // <Icon
+            //   as={FaTrashAlt}
+            //   onClick={onClickRemoveGym}
+            //   color="red.700"
+            //   w={6}
+            //   h={6}
+            //   my="auto"
+            // />
+            <Popover
+              icon={FaTrashAlt}
               onClick={onClickRemoveGym}
+              body="作成したジムを削除します。取り消せません。よろしいですか？"
+              header="ジムを削除"
               color="red.700"
               w={6}
               h={6}
@@ -225,72 +237,78 @@ const HereDetailScreen = () => {
         </Flex>
         <Divider colorScheme="darkgray" mb="5" mt="2" />
         <Text my="20px">登録をしている人</Text>
-        {climbingUser?.map((user, index) => {
-          if (!user || !user?.finishClimbingTime || !user.startClimbingTime)
-            return null;
-          const {
-            nickname,
-            avatarImage,
-            finishClimbingTime,
-            startClimbingTime,
-            climbingId,
-          } = user;
+        <Box overflow={"auto"} h={`${window.innerHeight - 335}px`}>
+          {climbingUser?.map((user, index) => {
+            if (!user || !user?.finishClimbingTime || !user.startClimbingTime)
+              return null;
+            const {
+              nickname,
+              avatarImage,
+              finishClimbingTime,
+              startClimbingTime,
+              climbingId,
+            } = user;
 
-          const menuItem = [
-            {
-              title: "この予定を編集する",
-              onClick: () => {
-                setClimbingId(climbingId);
-                onOpen();
+            const menuItem = [
+              {
+                title: "この予定を編集する",
+                onClick: () => {
+                  setClimbingId(climbingId);
+                  onOpen();
+                },
               },
-            },
-            {
-              title: "この予定を削除する",
-              onClick: () => onClickRemoveClimbingUser(climbingId),
-            },
-          ];
+              {
+                title: "この予定を削除する",
+                onClick: () => onClickRemoveClimbingUser(climbingId),
+              },
+              // {
+              //   title: "帰宅する",
+              //   onClick: onClickReturnHome
+              // }
+            ];
 
-          const ISOtoHourMin = (time?: string | null) => {
-            if (!time) return null;
-            const dt = new Date(time);
-            return format(dt, "HH:mm");
-          };
-          return (
-            <Box key={index} mb="4" onClick={() => setClimbingId(climbingId)}>
-              <Flex>
-                <Avatar
-                  bg={avatarImage as ResponsiveValue<Union<"current">>}
-                  mr="5"
-                />
-                <Box>
-                  <Text>{nickname}</Text>
-                  <Flex>
-                    <Badge
-                      colorScheme={
-                        changeBadge(startClimbingTime, finishClimbingTime)
-                          ?.color
-                      }
-                      rounded="md"
-                      py="auto"
-                    >
-                      {
-                        changeBadge(startClimbingTime, finishClimbingTime)
-                          ?.message
-                      }
-                    </Badge>
-                    <Text>
-                      {ISOtoHourMin(startClimbingTime)} ~
-                      {ISOtoHourMin(finishClimbingTime)}
-                    </Text>
-                  </Flex>
-                </Box>
-                <Spacer />
-                <Menu menuItem={menuItem} />
-              </Flex>
-              <Divider color="#CBD5E0" mt="10px" />
-            </Box>
-          );
-        })}
+            const ISOtoHourMin = (time?: string | null) => {
+              if (!time) return null;
+              const dt = new Date(time);
+              return format(dt, "HH:mm");
+            };
+            return (
+              <Box key={index} mb="4" onClick={() => setClimbingId(climbingId)}>
+                <Flex>
+                  <Avatar
+                    bg={avatarImage as ResponsiveValue<Union<"current">>}
+                    mr="5"
+                  />
+                  <Box>
+                    <Text>{nickname}</Text>
+                    <Flex>
+                      <Badge
+                        colorScheme={
+                          changeBadge(startClimbingTime, finishClimbingTime)
+                            ?.color
+                        }
+                        rounded="md"
+                        py="auto"
+                      >
+                        {
+                          changeBadge(startClimbingTime, finishClimbingTime)
+                            ?.message
+                        }
+                      </Badge>
+                      <Text>
+                        {ISOtoHourMin(startClimbingTime)} ~
+                        {ISOtoHourMin(finishClimbingTime)}
+                      </Text>
+                    </Flex>
+                  </Box>
+                  <Spacer />
+                  <Menu menuItem={menuItem} />
+                </Flex>
+                <Divider color="#CBD5E0" mt="10px" />
+              </Box>
+            );
+          })}
+        </Box>
       </Box>
 
       <Box
@@ -305,7 +323,7 @@ const HereDetailScreen = () => {
       >
         <Center h="100%">
           <Button colorScheme="blue" onClick={onOpen}>
-            {findMe ? "登る時間帯を変更する" : "登る！"}
+            登る予定を追加する
           </Button>
         </Center>
       </Box>

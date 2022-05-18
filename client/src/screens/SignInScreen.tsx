@@ -13,6 +13,7 @@ const SigninScreen = () => {
 
   const {
     handleSubmit,
+    register,
     formState: { errors, isSubmitting },
   } = useForm<FormData>();
 
@@ -28,7 +29,7 @@ const SigninScreen = () => {
         新規登録
       </Text>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <RegisterBlock navigatePass="/logIn" />
+        <RegisterBlock navigatePass="/logIn" register={register} />
         <Button
           mt={4}
           colorScheme="teal"
