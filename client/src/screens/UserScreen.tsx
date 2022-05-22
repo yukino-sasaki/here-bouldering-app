@@ -51,18 +51,16 @@ const UserScreen = () => {
       if (!selectAvatarImage) {
         throw new Error("アイコンを選択してください");
       }
-      console.log(nickname, selectAvatarImage);
-      const response = await createUserMutation({
+      await createUserMutation({
         variables: {
           nickname,
           avatarImage: selectAvatarImage,
         },
       });
-      console.log("res", response);
 
       navigate("/");
     } catch (error) {
-      console.log(error);
+      throw error;
     }
   };
 

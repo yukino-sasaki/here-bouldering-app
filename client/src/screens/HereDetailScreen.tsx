@@ -48,7 +48,6 @@ const HereDetailScreen = () => {
   const { gymId } = location.state as { gymId: string };
   const nowDateTime = new Date();
   const now = nowDateTime.getHours() * 3600 + nowDateTime.getMinutes() * 60;
-  const screenHeight = window.innerHeight;
 
   const [startTime, setStartTime] = useState<string>(
     format(nowDateTime, "HH:mm")
@@ -152,7 +151,7 @@ const HereDetailScreen = () => {
       });
       console.log(response);
     } catch (error) {
-      console.log(error);
+      throw error;
     }
   };
 

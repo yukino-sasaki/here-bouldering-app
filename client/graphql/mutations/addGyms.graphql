@@ -4,16 +4,20 @@ mutation AddGyms(
   $CreaterInput: CreaterInput!
 ) {
   addGyms(name: $name, place: $place, CreaterInput: $CreaterInput) {
-    gymId
-    name
-    place
-    creater {
-      userId
-      nickname
-      avatarImage
+    gym {
+      gymId
+      name
+      place
+      creater {
+        userId
+        nickname
+        avatarImage
+      }
+      climbingUser {
+        userId
+      }
     }
-    climbingUser {
-      userId
-    }
+    message
+    status
   }
 }

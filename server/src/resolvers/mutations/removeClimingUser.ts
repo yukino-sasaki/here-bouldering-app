@@ -21,7 +21,6 @@ export const removeClimbingUser: MutationResolvers["removeClimbingUser"] =
         new: true,
       }
     );
-    console.log(climbingId, removeClimbingUser);
 
     await User.findOneAndUpdate(
       {

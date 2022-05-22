@@ -53,7 +53,7 @@ const HomeScreen = () => {
   const [unregisterGymMutation] = useUnregisterGymMutation();
   const { data, loading, error } = useMeQuery();
   const me = data?.me;
-  console.log(me);
+
   const createGym = useDisclosure();
   const userSetting = useDisclosure();
   const drawer = useDisclosure();
@@ -89,9 +89,9 @@ const HomeScreen = () => {
           },
         },
       });
-      console.log(response);
+      showToast(response.data?.addGyms);
     } catch (error) {
-      throw console.log(error);
+      throw error;
     }
   };
 
@@ -107,7 +107,7 @@ const HomeScreen = () => {
 
       showToast(response.data?.editMe);
     } catch (error) {
-      throw console.log(error);
+      throw error;
     }
   };
 
@@ -119,7 +119,7 @@ const HomeScreen = () => {
       });
       showToast(response.data?.unregisterGym);
     } catch (error) {
-      console.log(error);
+      throw error;
     }
   };
 
@@ -263,7 +263,7 @@ const HomeScreen = () => {
                     // await client.resetStore();
                     navigate("/logIn");
                   } catch (error) {
-                    console.log(error);
+                    throw error;
                   }
                 }}
               >

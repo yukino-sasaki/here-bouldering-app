@@ -20,9 +20,7 @@ const LogInScreen = () => {
 
   const onSubmit = async (value: { email: string; password: string }) => {
     const { email, password } = value;
-    console.log(email, password);
     await login(email, password);
-    console.log(auth.currentUser);
     if (auth.currentUser) {
       await auth.currentUser.reload();
       navigate("/");

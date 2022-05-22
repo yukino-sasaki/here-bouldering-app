@@ -13,7 +13,6 @@ export const resetClimbingUser: MutationResolvers["resetClimbingUser"] =
       },
       { multi: true }
     );
-    console.log(res);
     const gym = await Gym.updateMany(
       {},
       {
@@ -24,7 +23,6 @@ export const resetClimbingUser: MutationResolvers["resetClimbingUser"] =
       },
       { multi: true }
     );
-    console.log(res, gym);
     return {
       status: MutateStatus.Success,
       message: "成功しました！",

@@ -31,11 +31,7 @@ export const Popover: React.FC<Props> = (props) => {
   const { icon, onClick, header, body, ...styleProps } = props;
 
   return (
-    <PopoverElement
-      //   initialFocusRef={initialFocusRef}
-      placement="bottom-end"
-      closeOnBlur={true}
-    >
+    <PopoverElement placement="bottom-end" closeOnBlur={true}>
       <PopoverTrigger>
         <PopoverIcon
           icon={<Icon as={icon} />}

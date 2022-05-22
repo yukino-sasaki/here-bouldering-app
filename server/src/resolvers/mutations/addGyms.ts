@@ -1,5 +1,5 @@
 import { nanoid } from "nanoid";
-import { MutationResolvers } from "../../generated/graphql";
+import { MutateStatus, MutationResolvers } from "../../generated/graphql";
 import Gym from "../../models/gyms";
 
 export const addGyms: MutationResolvers["addGyms"] = async (
@@ -15,6 +15,11 @@ export const addGyms: MutationResolvers["addGyms"] = async (
     },
     climbingUser: [],
   }).save();
-  console.log("GYM", gyms);
-  return gyms;
+
+  return {
+    status: MutateStatus.Success,
+    message:
+      "ジムを作成しました。メニューのジムを登録するからダッシュボードに登録してください。",
+    gym: gyms,
+  };
 };

@@ -29,7 +29,6 @@ const useFirebase = () => {
       });
     } catch (error) {
       const { code } = error as FirebaseError;
-      console.log(code);
       if (code === "auth/email-already-in-use") {
         toast({
           title: "メールアドレスがすでに存在します。ログインしてください。",
@@ -74,9 +73,7 @@ const useFirebase = () => {
         }
       );
     } catch (error) {
-      // console.log(error);
       const { code } = error as FirebaseError;
-      console.log(code);
       if (code === "auth/invalid-email") {
         toast({
           title: "メールアドレスに不正な値があります。",

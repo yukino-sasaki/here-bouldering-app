@@ -83,6 +83,13 @@ export type GymInput = {
   place: Scalars['String'];
 };
 
+export type GymResponse = {
+  __typename?: 'GymResponse';
+  gym?: Maybe<Gym>;
+  message: Scalars['String'];
+  status: MutateStatus;
+};
+
 export type Gyms = {
   __typename?: 'Gyms';
   gyms?: Maybe<Array<Maybe<Gym>>>;
@@ -113,7 +120,7 @@ export enum MutateStatus {
 export type Mutation = {
   __typename?: 'Mutation';
   addClimbingUser?: Maybe<ClimbingUserResponse>;
-  addGyms?: Maybe<Gym>;
+  addGyms?: Maybe<GymResponse>;
   createUser: User;
   editClimbingUser?: Maybe<ClimbingUserResponse>;
   editMe?: Maybe<MeResponse>;
@@ -252,7 +259,7 @@ export type AddGymsMutationVariables = Exact<{
 }>;
 
 
-export type AddGymsMutation = { __typename?: 'Mutation', addGyms?: { __typename?: 'Gym', gymId: string, name: string, place: string, creater: { __typename?: 'Creater', userId: string, nickname: string, avatarImage: string }, climbingUser?: Array<{ __typename?: 'ClimbingUser', userId: string } | null> | null } | null };
+export type AddGymsMutation = { __typename?: 'Mutation', addGyms?: { __typename?: 'GymResponse', message: string, status: MutateStatus, gym?: { __typename?: 'Gym', gymId: string, name: string, place: string, creater: { __typename?: 'Creater', userId: string, nickname: string, avatarImage: string }, climbingUser?: Array<{ __typename?: 'ClimbingUser', userId: string } | null> | null } | null } | null };
 
 export type CreateUserMutationVariables = Exact<{
   nickname: Scalars['String'];
@@ -381,17 +388,21 @@ export type AddClimbingUserMutationOptions = Apollo.BaseMutationOptions<AddClimb
 export const AddGymsDocument = gql`
     mutation AddGyms($name: String!, $place: String!, $CreaterInput: CreaterInput!) {
   addGyms(name: $name, place: $place, CreaterInput: $CreaterInput) {
-    gymId
-    name
-    place
-    creater {
-      userId
-      nickname
-      avatarImage
+    gym {
+      gymId
+      name
+      place
+      creater {
+        userId
+        nickname
+        avatarImage
+      }
+      climbingUser {
+        userId
+      }
     }
-    climbingUser {
-      userId
-    }
+    message
+    status
   }
 }
     `;

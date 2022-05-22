@@ -27,7 +27,7 @@ const db = async () => {
       .then(() => console.log("DB connected"))
       .catch((err) => console.log("DB Error => ", err));
   } catch (error) {
-    console.log(error);
+    throw error;
   }
 };
 
@@ -53,7 +53,6 @@ const apolloServer = new ApolloServer({
 
     try {
       const decoded = await authorization.verifyIdToken(idToken);
-      console.log("id", decoded.uid, "email", decoded.email);
       return {
         id: decoded.uid,
         email: decoded.email,

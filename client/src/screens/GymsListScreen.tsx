@@ -30,7 +30,6 @@ const GymsListScreen = () => {
   const gyms = data?.gyms;
 
   const toast = useToast();
-  console.log(gyms);
 
   function showToast<T extends MutationResponse>(
     response?: T | null,
@@ -58,7 +57,6 @@ const GymsListScreen = () => {
             variables: null,
           });
           const existMe = meQuery?.me;
-          console.log("exist", meQuery);
           cache.writeQuery({
             query: MeDocument,
             data: {
@@ -70,8 +68,6 @@ const GymsListScreen = () => {
           });
         },
       });
-
-      console.log("register gym!", response.data);
 
       const { errors, data } = response;
       const registerGym = data?.registerGym;
