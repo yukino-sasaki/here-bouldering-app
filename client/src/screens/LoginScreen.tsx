@@ -1,7 +1,8 @@
 import { Box, Button, Text } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import { RegisterBlock } from "../components/RegisterBlock";
-import useFirebase from "../useFirebase";
+import useFirebase from "../firebase/useFirebase";
 
 type FormData = {
   email: string;
@@ -9,16 +10,23 @@ type FormData = {
 };
 
 const LogInScreen = () => {
-  const { login } = useFirebase();
-
+  const { login, auth } = useFirebase();
+  const navigate = useNavigate();
   const {
     handleSubmit,
+    register,
     formState: { errors, isSubmitting },
   } = useForm<FormData>();
 
-  const onSubmit = (value: { email: string; password: string }) => {
+  const onSubmit = async (value: { email: string; password: string }) => {
     const { email, password } = value;
-    login(email, password);
+    await login(email, password);
+    if (auth.currentUser) {
+      await auth.currentUser.reload();
+      navigate("/");
+    }
+
+    // await meQuery.refetch();
   };
   return (
     <Box maxW={"60%"} mx="auto">
@@ -27,7 +35,8 @@ const LogInScreen = () => {
       </Text>
 
       <form onSubmit={handleSubmit(onSubmit)}>
-        <RegisterBlock navigatePass="/signIn" />
+        <RegisterBlock navigatePass="/signIn" register={register} />
+        {errors && <Text color={"red"}> {errors.email?.message}</Text>}
         <Button
           mt={4}
           colorScheme="teal"

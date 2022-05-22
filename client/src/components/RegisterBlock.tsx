@@ -1,18 +1,19 @@
 import { FormControl, FormLabel, Input, Text } from "@chakra-ui/react";
-import { useForm } from "react-hook-form";
+import { UseFormRegister } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
 type Props = {
   navigatePass: "/signIn" | "/logIn";
+  register: UseFormRegister<FormData>;
 };
 
 type FormData = {
   email: string;
   password: string;
 };
-export const RegisterBlock: React.FC<Props> = ({ navigatePass }) => {
+
+export const RegisterBlock: React.FC<Props> = ({ navigatePass, register }) => {
   const navigate = useNavigate();
-  const { register } = useForm<FormData>();
 
   return (
     <>
@@ -22,7 +23,7 @@ export const RegisterBlock: React.FC<Props> = ({ navigatePass }) => {
           placeholder="xxxxxx@gmail.com"
           variant="flushed"
           {...register("email", {
-            required: "This is required",
+            required: "メールアドレスを入力してください。",
           })}
         />
       </FormControl>
@@ -32,7 +33,7 @@ export const RegisterBlock: React.FC<Props> = ({ navigatePass }) => {
           placeholder="password"
           variant="flushed"
           {...register("password", {
-            required: "This is required",
+            required: "パスワードを入力してください。",
           })}
         />
       </FormControl>

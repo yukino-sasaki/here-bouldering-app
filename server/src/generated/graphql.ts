@@ -17,9 +17,9 @@ export type Scalars = {
 
 export type ClimbingTime = {
   __typename?: 'ClimbingTime';
-  climbingId?: Maybe<Scalars['ID']>;
+  climbingId: Scalars['ID'];
   finishClimbingTime?: Maybe<Scalars['String']>;
-  gymId?: Maybe<Scalars['ID']>;
+  gymId: Scalars['ID'];
   name: Scalars['String'];
   startClimbingTime?: Maybe<Scalars['String']>;
 };
@@ -27,7 +27,7 @@ export type ClimbingTime = {
 export type ClimbingUser = {
   __typename?: 'ClimbingUser';
   avatarImage: Scalars['String'];
-  climbingId?: Maybe<Scalars['ID']>;
+  climbingId: Scalars['ID'];
   finishClimbingTime?: Maybe<Scalars['String']>;
   nickname: Scalars['String'];
   startClimbingTime?: Maybe<Scalars['String']>;
@@ -83,6 +83,13 @@ export type GymInput = {
   place: Scalars['String'];
 };
 
+export type GymResponse = {
+  __typename?: 'GymResponse';
+  gym?: Maybe<Gym>;
+  message: Scalars['String'];
+  status: MutateStatus;
+};
+
 export type Gyms = {
   __typename?: 'Gyms';
   gyms?: Maybe<Array<Maybe<Gym>>>;
@@ -113,7 +120,7 @@ export enum MutateStatus {
 export type Mutation = {
   __typename?: 'Mutation';
   addClimbingUser?: Maybe<ClimbingUserResponse>;
-  addGyms?: Maybe<Gym>;
+  addGyms?: Maybe<GymResponse>;
   createUser: User;
   editClimbingUser?: Maybe<ClimbingUserResponse>;
   editMe?: Maybe<MeResponse>;
@@ -313,6 +320,7 @@ export type ResolversTypes = {
   Gym: ResolverTypeWrapper<Gym>;
   GymInfo: ResolverTypeWrapper<GymInfo>;
   GymInput: GymInput;
+  GymResponse: ResolverTypeWrapper<GymResponse>;
   Gyms: ResolverTypeWrapper<Gyms>;
   ID: ResolverTypeWrapper<Scalars['ID']>;
   Me: ResolverTypeWrapper<Me>;
@@ -341,6 +349,7 @@ export type ResolversParentTypes = {
   Gym: Gym;
   GymInfo: GymInfo;
   GymInput: GymInput;
+  GymResponse: GymResponse;
   Gyms: Gyms;
   ID: Scalars['ID'];
   Me: Me;
@@ -357,9 +366,9 @@ export type ResolversParentTypes = {
 };
 
 export type ClimbingTimeResolvers<ContextType = Context, ParentType extends ResolversParentTypes['ClimbingTime'] = ResolversParentTypes['ClimbingTime']> = {
-  climbingId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  climbingId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   finishClimbingTime?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  gymId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  gymId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   startClimbingTime?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -367,7 +376,7 @@ export type ClimbingTimeResolvers<ContextType = Context, ParentType extends Reso
 
 export type ClimbingUserResolvers<ContextType = Context, ParentType extends ResolversParentTypes['ClimbingUser'] = ResolversParentTypes['ClimbingUser']> = {
   avatarImage?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  climbingId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  climbingId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   finishClimbingTime?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   nickname?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   startClimbingTime?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -405,6 +414,13 @@ export type GymInfoResolvers<ContextType = Context, ParentType extends Resolvers
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type GymResponseResolvers<ContextType = Context, ParentType extends ResolversParentTypes['GymResponse'] = ResolversParentTypes['GymResponse']> = {
+  gym?: Resolver<Maybe<ResolversTypes['Gym']>, ParentType, ContextType>;
+  message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  status?: Resolver<ResolversTypes['MutateStatus'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type GymsResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Gyms'] = ResolversParentTypes['Gyms']> = {
   gyms?: Resolver<Maybe<Array<Maybe<ResolversTypes['Gym']>>>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -428,7 +444,7 @@ export type MeResponseResolvers<ContextType = Context, ParentType extends Resolv
 
 export type MutationResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   addClimbingUser?: Resolver<Maybe<ResolversTypes['ClimbingUserResponse']>, ParentType, ContextType, RequireFields<MutationAddClimbingUserArgs, 'input'>>;
-  addGyms?: Resolver<Maybe<ResolversTypes['Gym']>, ParentType, ContextType, RequireFields<MutationAddGymsArgs, 'CreaterInput' | 'name' | 'place'>>;
+  addGyms?: Resolver<Maybe<ResolversTypes['GymResponse']>, ParentType, ContextType, RequireFields<MutationAddGymsArgs, 'CreaterInput' | 'name' | 'place'>>;
   createUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'avatarImage' | 'nickname'>>;
   editClimbingUser?: Resolver<Maybe<ResolversTypes['ClimbingUserResponse']>, ParentType, ContextType, Partial<MutationEditClimbingUserArgs>>;
   editMe?: Resolver<Maybe<ResolversTypes['MeResponse']>, ParentType, ContextType, RequireFields<MutationEditMeArgs, 'input'>>;
@@ -482,6 +498,7 @@ export type Resolvers<ContextType = Context> = {
   Creater?: CreaterResolvers<ContextType>;
   Gym?: GymResolvers<ContextType>;
   GymInfo?: GymInfoResolvers<ContextType>;
+  GymResponse?: GymResponseResolvers<ContextType>;
   Gyms?: GymsResolvers<ContextType>;
   Me?: MeResolvers<ContextType>;
   MeResponse?: MeResponseResolvers<ContextType>;

@@ -40,20 +40,9 @@ export const registerGym: MutationResolvers["registerGym"] = async (
     }
   );
 
-  console.log(me);
-  // await Gym.findOneAndUpdate(
-  //   { gymId: GymInput.gymId },
-  //   {
-  //     $push: {
-  //       climbingUser: me,
-  //     },
-  //   },
-  //   { new: true }
-  // );
-
   return {
     registerGyms: me?.registerGyms,
     status: MutateStatus.Success,
-    message: "成功しました！",
+    message: "ジムを登録しました！",
   };
 };

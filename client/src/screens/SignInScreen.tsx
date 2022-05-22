@@ -1,14 +1,14 @@
 import { Box, Button, Text } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { RegisterBlock } from "../components/RegisterBlock";
-import useFirebase from "../useFirebase";
+import useFirebase from "../firebase/useFirebase";
 
 type FormData = {
   email: string;
   password: string;
 };
 
-const SignInScreen = () => {
+const SigninScreen = () => {
   const { registerUser } = useFirebase();
 
   const {
@@ -29,18 +29,19 @@ const SignInScreen = () => {
         新規登録
       </Text>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <RegisterBlock navigatePass="/logIn" />
+        <RegisterBlock navigatePass="/logIn" register={register} />
+        {errors && <Text color={"red"}> {errors.email?.message}</Text>}
         <Button
           mt={4}
           colorScheme="teal"
           isLoading={isSubmitting}
           type="submit"
         >
-          サインインする
+          サインアップ
         </Button>
       </form>
     </Box>
   );
 };
 
-export default SignInScreen;
+export default SigninScreen;

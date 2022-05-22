@@ -9,22 +9,21 @@ import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
-import { auth } from "./firebase";
+import { auth } from "./firebase/firebase";
 import GymsListScreen from "./screens/GymsListScreen";
 import HereDetailScreen from "./screens/HereDetailScreen";
 import HomeScreen from "./screens/HomeScreen";
 import LogInScreen from "./screens/LoginScreen";
-import SignInScreen from "./screens/SignInScreen";
+import SigninScreen from "./screens/SigninScreen";
 import UserScreen from "./screens/UserScreen";
 
-// 2. Call `extendTheme` and pass your custom values
 const theme = extendTheme({
   colors: {
     background: "#F0F0F2",
     whitegray: "#D7D7D9",
-    ligntgray: "#A6A6A6",
-    gray: "#585859",
-    darkgray: "#3F3F40",
+    lightgray: "#A6A6A6",
+    menuBg: "#585859",
+    headerBg: "#3F3F40",
   },
 });
 
@@ -57,7 +56,7 @@ const authLink = setContext(async (_, { headers }) => {
   };
 });
 
-const client = new ApolloClient({
+export const client = new ApolloClient({
   link: authLink.concat(httpLink),
   // uri: process.env.REACT_APP_GRAPHQL_ENDPOINT,
   cache: new InMemoryCache(),
@@ -70,7 +69,7 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<HomeScreen />} />
-            <Route path="/signIn" element={<SignInScreen />} />
+            <Route path="/signIn" element={<SigninScreen />} />
             <Route path="/logIn" element={<LogInScreen />} />
             <Route path="/detail" element={<HereDetailScreen />} />
             <Route path="/user" element={<UserScreen />} />

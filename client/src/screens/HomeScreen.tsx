@@ -1,5 +1,6 @@
 import {
   Avatar,
+  Box,
   Button,
   Center,
   Drawer,
@@ -23,6 +24,7 @@ import { HiOutlineMenu } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
 import { Menu } from "../components/Menu";
 import { Modal } from "../components/Modal";
+import useFirebase from "../firebase/useFirebase";
 import {
   MeDocument,
   useAddGymsMutation,
@@ -44,25 +46,32 @@ const HomeScreen = () => {
   const { register: editMeRegister, handleSubmit: editMeHandleSubmit } =
     useForm<UserInput>();
 
+  const { logout } = useFirebase();
   const { showToast } = useShowToast();
   const [addGymsMutation] = useAddGymsMutation();
   const [editMeMutation] = useEditMeMutation();
   const [unregisterGymMutation] = useUnregisterGymMutation();
   const { data, loading, error } = useMeQuery();
   const me = data?.me;
-  console.log(me);
+
   const createGym = useDisclosure();
   const userSetting = useDisclosure();
   const drawer = useDisclosure();
 
-  if (loading || error)
+  if (loading || error || !me)
     return (
-      <div>
-        loading:{loading}, error: {error}
-        情報を取得できませんでした。しばらく待っても画面が表示されない場合、お手数ですが再読み込みかもう一度サインインをし直してください
-      </div>
+      <Box p="5" maxW={"60%"} mx="auto">
+        <Text mb="6">
+          こちらのサービスを利用するためにログインまたはサインアップをお願いいたします。
+        </Text>
+        <Button colorScheme={"blue"} onClick={() => navigate("/signIn")}>
+          サインアップ
+        </Button>
+        <Button colorScheme={"blue"} onClick={() => navigate("/logIn")} ml="5">
+          ログイン
+        </Button>
+      </Box>
     );
-  if (!me) return <div>me is null</div>;
 
   const { userId, nickname, avatarImage, registerGyms } = me;
 
@@ -80,9 +89,9 @@ const HomeScreen = () => {
           },
         },
       });
-      console.log(response);
+      showToast(response.data?.addGyms);
     } catch (error) {
-      throw console.log(error);
+      throw error;
     }
   };
 
@@ -98,7 +107,7 @@ const HomeScreen = () => {
 
       showToast(response.data?.editMe);
     } catch (error) {
-      throw console.log(error);
+      throw error;
     }
   };
 
@@ -110,38 +119,53 @@ const HomeScreen = () => {
       });
       showToast(response.data?.unregisterGym);
     } catch (error) {
-      console.log(error);
+      throw error;
     }
   };
 
   return (
     <>
-      <div className="bg-darkgray flex-col justify-between h-16 flex">
-        <div className="flex flex-row justify-between px-8">
-          <Icon
-            as={HiOutlineMenu}
-            color="white"
-            w={8}
-            h={8}
-            my="auto"
-            onClick={drawer.onOpen}
-          />
-          <h2 className="text-3xl text-white h-9 my-auto">Here!Bouldering!</h2>
-          <div className="w-28">
-            <div className="flex flex-row justify-center">
-              <Avatar bg={avatarImage} size="sm" />
-            </div>
-            <Text color="white" fontSize="sm" align="center">
-              {nickname}
+      <Box bg="headerBg" alignItems={"center"}>
+        <Flex direction={"column"} justifyContent="space-between">
+          <Flex justify="space-between" px="8">
+            <Icon
+              as={HiOutlineMenu}
+              color="white"
+              w={8}
+              h={8}
+              my="auto"
+              onClick={drawer.onOpen}
+            />
+            <Text fontSize={"3xl"} color="white">
+              Here!Bouldering!
             </Text>
-          </div>
-        </div>
-      </div>
+            <Box>
+              <Flex justify={"center"}>
+                <Avatar bg={avatarImage} size="sm" />
+              </Flex>
+              <Text color="white" fontSize="sm" align="center">
+                {nickname}
+              </Text>
+            </Box>
+          </Flex>
+        </Flex>
+      </Box>
 
-      <div className="bg-white w-full h-screen px-5 pt-8 relative">
-        <Grid gap={5} templateColumns="repeat(4, 1fr)">
-          {registerGyms.length !== 0 &&
-            registerGyms.map((registerGym, i) => {
+      <div className="bg-white w-full min-h-screen px-5 pt-8 relative">
+        {registerGyms.length === 0 ? (
+          <Text fontWeight={"bold"} fontSize="xl" align="center">
+            ジムがまだ登録されていません！メニューのジムをダッシュボードに登録するから登録をするか、新規でジムの作成をお願いします！
+          </Text>
+        ) : (
+          <Grid
+            gap={5}
+            templateColumns={[
+              "repeat(1, 1fr)",
+              "repeat(2, 1fr)",
+              "repeat(4, 1fr)",
+            ]}
+          >
+            {registerGyms.map((registerGym, i) => {
               const { name, place, gymId } = registerGym;
               const menuItem = [
                 {
@@ -182,25 +206,22 @@ const HomeScreen = () => {
                   >
                     <div className="text-white text-2xl">{name}</div>
                   </Center>
-                  <Flex>
-                    <div className="px-3 leading-8">{place}</div>
+                  <Flex
+                    align={"center"}
+                    bg="white"
+                    h="10"
+                    borderBottomRadius={"md"}
+                    pl="1"
+                  >
+                    <Text>{place}</Text>
                     <Spacer />
-                    <Menu menuItem={menuItem} />
-                    {/* <Menu>
-                      <MenuButton as={Button}>
-                        <BsThreeDotsVertical />
-                      </MenuButton>
-                      <MenuList>
-                        <MenuItem onClick={() => onClickUnregisterGym(gymId)}>
-                          登録を解除
-                        </MenuItem>
-                      </MenuList>
-                    </Menu> */}
+                    <Menu menuItem={menuItem} borderBottomRightRadius="md" />
                   </Flex>
                 </GridItem>
               );
             })}
-        </Grid>
+          </Grid>
+        )}
 
         <Drawer
           placement="left"
@@ -210,7 +231,7 @@ const HomeScreen = () => {
         >
           <div className="bg-menuBg z-50 h-screen absolute top-0 left-0">
             <DrawerCloseButton color="white" />
-            <DrawerHeader color="white">設定</DrawerHeader>
+            <DrawerHeader color="white">メニュー</DrawerHeader>
             <DrawerBody>
               <Button
                 colorScheme="white"
@@ -232,6 +253,21 @@ const HomeScreen = () => {
                 onClick={() => navigate("/gymsList")}
               >
                 ジムをダッシュボードに登録する
+              </Button>
+              <Button
+                colorScheme="white"
+                isFullWidth
+                onClick={async () => {
+                  try {
+                    await logout();
+                    // await client.resetStore();
+                    navigate("/logIn");
+                  } catch (error) {
+                    throw error;
+                  }
+                }}
+              >
+                ログアウト
               </Button>
             </DrawerBody>
           </div>
@@ -271,7 +307,6 @@ const HomeScreen = () => {
         onClose={userSetting.onClose}
         header={"ユーザー名を変更する"}
         submit="変更する"
-        // templary
         handleSubmit={editMeHandleSubmit}
         onSubmit={editMeSubmit}
       >

@@ -39,8 +39,6 @@ export const editClimbingUser: MutationResolvers["editClimbingUser"] = async (
       }
     );
 
-    console.log(climbingId, editClimbingUser);
-
     await User.findOneAndUpdate(
       {
         userId: id,
