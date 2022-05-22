@@ -30,13 +30,14 @@ const SigninScreen = () => {
       </Text>
       <form onSubmit={handleSubmit(onSubmit)}>
         <RegisterBlock navigatePass="/logIn" register={register} />
+        {errors && <Text color={"red"}> {errors.email?.message}</Text>}
         <Button
           mt={4}
           colorScheme="teal"
           isLoading={isSubmitting}
           type="submit"
         >
-          サインインする
+          サインアップ
         </Button>
       </form>
     </Box>

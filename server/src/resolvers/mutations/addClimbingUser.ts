@@ -88,7 +88,7 @@ export const addClimbingUser: MutationResolvers["addClimbingUser"] = async (
 
   return {
     status: MutateStatus.Success,
-    message: "成功しました！",
+    message: "登る予定を追加しました！",
     gym: updateGym,
   };
 };

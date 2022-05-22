@@ -58,14 +58,20 @@ const HomeScreen = () => {
   const userSetting = useDisclosure();
   const drawer = useDisclosure();
 
-  if (loading || error)
+  if (loading || error || !me)
     return (
-      <div>
-        loading:{loading}, error: {error}
-        情報を取得できませんでした。しばらく待っても画面が表示されない場合、お手数ですが再読み込みかもう一度サインインをし直してください
-      </div>
+      <Box p="5" maxW={"60%"} mx="auto">
+        <Text mb="6">
+          こちらのサービスを利用するためにログインまたはサインアップをお願いいたします。
+        </Text>
+        <Button colorScheme={"blue"} onClick={() => navigate("/signIn")}>
+          サインアップ
+        </Button>
+        <Button colorScheme={"blue"} onClick={() => navigate("/logIn")} ml="5">
+          ログイン
+        </Button>
+      </Box>
     );
-  if (!me) return <div>me is null</div>;
 
   const { userId, nickname, avatarImage, registerGyms } = me;
 
@@ -119,7 +125,7 @@ const HomeScreen = () => {
 
   return (
     <>
-      <Box bg="headerBg" h="16">
+      <Box bg="headerBg" alignItems={"center"}>
         <Flex direction={"column"} justifyContent="space-between">
           <Flex justify="space-between" px="8">
             <Icon
@@ -146,16 +152,20 @@ const HomeScreen = () => {
       </Box>
 
       <div className="bg-white w-full min-h-screen px-5 pt-8 relative">
-        <Grid
-          gap={5}
-          templateColumns={[
-            "repeat(1, 1fr)",
-            "repeat(2, 1fr)",
-            "repeat(4, 1fr)",
-          ]}
-        >
-          {registerGyms.length !== 0 &&
-            registerGyms.map((registerGym, i) => {
+        {registerGyms.length === 0 ? (
+          <Text fontWeight={"bold"} fontSize="xl" align="center">
+            ジムがまだ登録されていません！メニューのジムをダッシュボードに登録するから登録をするか、新規でジムの作成をお願いします！
+          </Text>
+        ) : (
+          <Grid
+            gap={5}
+            templateColumns={[
+              "repeat(1, 1fr)",
+              "repeat(2, 1fr)",
+              "repeat(4, 1fr)",
+            ]}
+          >
+            {registerGyms.map((registerGym, i) => {
               const { name, place, gymId } = registerGym;
               const menuItem = [
                 {
@@ -210,7 +220,8 @@ const HomeScreen = () => {
                 </GridItem>
               );
             })}
-        </Grid>
+          </Grid>
+        )}
 
         <Drawer
           placement="left"
@@ -243,7 +254,19 @@ const HomeScreen = () => {
               >
                 ジムをダッシュボードに登録する
               </Button>
-              <Button colorScheme="white" isFullWidth onClick={() => logout()}>
+              <Button
+                colorScheme="white"
+                isFullWidth
+                onClick={async () => {
+                  try {
+                    await logout();
+                    // await client.resetStore();
+                    navigate("/logIn");
+                  } catch (error) {
+                    console.log(error);
+                  }
+                }}
+              >
                 ログアウト
               </Button>
             </DrawerBody>

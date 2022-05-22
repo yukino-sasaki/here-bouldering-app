@@ -23,7 +23,7 @@ export const RegisterBlock: React.FC<Props> = ({ navigatePass, register }) => {
           placeholder="xxxxxx@gmail.com"
           variant="flushed"
           {...register("email", {
-            required: "This is required",
+            required: "メールアドレスを入力してください。",
           })}
         />
       </FormControl>
@@ -33,7 +33,7 @@ export const RegisterBlock: React.FC<Props> = ({ navigatePass, register }) => {
           placeholder="password"
           variant="flushed"
           {...register("password", {
-            required: "This is required",
+            required: "パスワードを入力してください。",
           })}
         />
       </FormControl>

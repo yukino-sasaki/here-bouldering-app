@@ -72,7 +72,12 @@ const HereDetailScreen = () => {
   const me = meQuery.data?.me;
 
   if (!me) return <></>;
-  if (!gym) return <Text>このジムは作成者によって削除されました</Text>;
+  if (!gym)
+    return (
+      <Text fontWeight={"bold"} fontSize="xl" align="center">
+        このジムは作成者によって削除されました。ダッシュボードから登録解除をしてください。
+      </Text>
+    );
   const { name, place, creater, climbingUser } = gym;
   const { avatarImage, nickname } = creater;
 
@@ -165,25 +170,6 @@ const HereDetailScreen = () => {
     }
   };
 
-  const onClickReturnHome = async () => {
-    try {
-      const calcReturnTime = nowDateTime.getTime() - 1000 * 60 * 1;
-      const returnTime = new Date(calcReturnTime).toISOString();
-      const response = await editClimbingUserMutation({
-        variables: {
-          input: {
-            climbingId,
-            gymId,
-            finishClimbingTime: returnTime,
-          },
-        },
-      });
-      showToast(response.data?.editClimbingUser);
-    } catch (error) {
-      throw new Error(`${error}`);
-    }
-  };
-
   const changeBadge = (
     startTime?: string | null,
     finishTime?: string | null
@@ -202,7 +188,7 @@ const HereDetailScreen = () => {
   };
 
   return (
-    <div className="mx-auto">
+    <Box mx="auto" p="5">
       <Box maxW="760px" mx="auto" pb="50">
         <Flex>
           <Text my="5" fontSize="4xl">
@@ -210,14 +196,6 @@ const HereDetailScreen = () => {
           </Text>
           <Spacer />
           {me.userId === creater.userId && (
-            // <Icon
-            //   as={FaTrashAlt}
-            //   onClick={onClickRemoveGym}
-            //   color="red.700"
-            //   w={6}
-            //   h={6}
-            //   my="auto"
-            // />
             <Popover
               icon={FaTrashAlt}
               onClick={onClickRemoveGym}
@@ -261,10 +239,6 @@ const HereDetailScreen = () => {
                 title: "この予定を削除する",
                 onClick: () => onClickRemoveClimbingUser(climbingId),
               },
-              // {
-              //   title: "帰宅する",
-              //   onClick: onClickReturnHome
-              // }
             ];
 
             const ISOtoHourMin = (time?: string | null) => {
@@ -375,16 +349,11 @@ const HereDetailScreen = () => {
               <Button colorScheme="blue" type="submit">
                 この時間帯に登る！
               </Button>
-              {findMe && (
-                <Button colorScheme="red" onClick={onClickReturnHome}>
-                  帰宅する
-                </Button>
-              )}
             </ModalFooter>
           </form>
         </ModalContent>
       </Modal>
-    </div>
+    </Box>
   );
 };
 

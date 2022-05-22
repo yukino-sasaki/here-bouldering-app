@@ -1,21 +1,17 @@
+import { useToast } from "@chakra-ui/react";
+import { FirebaseError } from "firebase/app";
 import {
   createUserWithEmailAndPassword,
-  onAuthStateChanged,
   signInWithEmailAndPassword,
   signOut,
-  User,
 } from "firebase/auth";
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { auth } from "./firebase";
 
 const useFirebase = () => {
   const navigate = useNavigate();
-  const [userData, setUserData] = useState<User | null>();
 
-  onAuthStateChanged(auth, (currentUser) => {
-    setUserData(currentUser);
-  });
+  const toast = useToast();
 
   const registerUser = async (
     registerEmail: string,
@@ -29,13 +25,43 @@ const useFirebase = () => {
       ).then((userCredential) => {
         const userResponse = userCredential.user;
         const { email, uid } = userResponse;
-        setUserData(userResponse);
         navigate("/user", { state: { user: { email, uid } } });
       });
     } catch (error) {
-      console.log(error);
+      const { code } = error as FirebaseError;
+      console.log(code);
+      if (code === "auth/email-already-in-use") {
+        toast({
+          title: "メールアドレスがすでに存在します。ログインしてください。",
+          position: "bottom",
+          status: "error",
+          isClosable: true,
+        });
+      } else if (code === "auth/invalid-email") {
+        toast({
+          title: "メールアドレスに不正な値があります。",
+          position: "bottom",
+          status: "error",
+          isClosable: true,
+        });
+      } else if (code === "auth/weak-password") {
+        toast({
+          title:
+            "より強力なパスワードを入力してください(例: 八文字以上、英数字を混ぜるなど)",
+          position: "bottom",
+          status: "error",
+          isClosable: true,
+        });
+      } else {
+        toast({
+          title: code,
+          position: "bottom",
+          status: "error",
+          isClosable: true,
+        });
+      }
+      throw error;
     }
-    navigate("/user", { state: { user: userData } });
   };
 
   const login = async (loginEmail: string, loginPassword: string) => {
@@ -44,19 +70,54 @@ const useFirebase = () => {
         (userCredential) => {
           // Signed in
           const userResponse = userCredential.user;
-          setUserData(userResponse);
-          console.log(loginEmail);
-          navigate("/", { state: { userData } });
+          navigate("/", { state: "login" });
         }
       );
     } catch (error) {
-      console.log(error);
+      // console.log(error);
+      const { code } = error as FirebaseError;
+      console.log(code);
+      if (code === "auth/invalid-email") {
+        toast({
+          title: "メールアドレスに不正な値があります。",
+          position: "bottom",
+          status: "error",
+          isClosable: true,
+        });
+      } else if (code === "auth/user-disabled") {
+        toast({
+          title: "ユーザーが無効です。",
+          position: "bottom",
+          status: "error",
+          isClosable: true,
+        });
+      } else if (code === "auth/user-not-found") {
+        toast({
+          title: "ユーザーが見つかりません。サインアップしてください。",
+          position: "bottom",
+          status: "error",
+          isClosable: true,
+        });
+      } else if (code === "auth/wrong-password") {
+        toast({
+          title: "このメールアドレスに対応するパスワードが異なります。",
+          position: "bottom",
+          status: "error",
+          isClosable: true,
+        });
+      } else {
+        toast({
+          title: code,
+          position: "bottom",
+          status: "error",
+          isClosable: true,
+        });
+      }
     }
   };
 
   const logout = async () => {
     await signOut(auth);
-    navigate("/logIn");
   };
   return {
     auth,
