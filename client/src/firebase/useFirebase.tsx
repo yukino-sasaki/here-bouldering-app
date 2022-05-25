@@ -69,7 +69,7 @@ const useFirebase = () => {
         (userCredential) => {
           // Signed in
           const userResponse = userCredential.user;
-          navigate("/", { state: "login" });
+          navigate("/", { state: userResponse });
         }
       );
     } catch (error) {
