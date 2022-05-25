@@ -20,7 +20,6 @@ export const removeGym: MutationResolvers["removeGym"] = async (
     },
     { new: true }
   );
-  console.log("update me register gym", updateMeRegisterGyms);
 
   return {
     status: MutateStatus.Success,
