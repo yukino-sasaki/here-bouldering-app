@@ -14,7 +14,7 @@ import GymsListScreen from "./screens/GymsListScreen";
 import HereDetailScreen from "./screens/HereDetailScreen";
 import HomeScreen from "./screens/HomeScreen";
 import LogInScreen from "./screens/LoginScreen";
-import SigninScreen from "./screens/SigninScreen";
+import SignInScreen from "./screens/SignInScreen";
 import UserScreen from "./screens/UserScreen";
 
 const theme = extendTheme({
@@ -69,7 +69,7 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<HomeScreen />} />
-            <Route path="/signIn" element={<SigninScreen />} />
+            <Route path="/signIn" element={<SignInScreen />} />
             <Route path="/logIn" element={<LogInScreen />} />
             <Route path="/detail" element={<HereDetailScreen />} />
             <Route path="/user" element={<UserScreen />} />

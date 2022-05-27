@@ -9,7 +9,7 @@ export const removeGym: MutationResolvers["removeGym"] = async (
 ) => {
   await Gym.remove({ gymId });
 
-  const updateMeRegisterGyms = await User.findOneAndUpdate(
+  await User.findOneAndUpdate(
     {
       userId: id,
     },
@@ -20,7 +20,6 @@ export const removeGym: MutationResolvers["removeGym"] = async (
     },
     { new: true }
   );
-  console.log("update me register gym", updateMeRegisterGyms);
 
   return {
     status: MutateStatus.Success,

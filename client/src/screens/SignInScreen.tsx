@@ -8,7 +8,7 @@ type FormData = {
   password: string;
 };
 
-const SigninScreen = () => {
+const SignInScreen = () => {
   const { registerUser } = useFirebase();
 
   const {
@@ -44,4 +44,4 @@ const SigninScreen = () => {
   );
 };
 
-export default SigninScreen;
+export default SignInScreen;
