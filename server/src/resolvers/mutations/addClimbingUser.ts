@@ -8,7 +8,6 @@ export const addClimbingUser: MutationResolvers["addClimbingUser"] = async (
   { input },
   { id }
 ) => {
-  // const { ObjectId } = Types;
   const { gymId, name, ...registerClimbingUserInput } = input;
   const { finishClimbingTime, startClimbingTime } = registerClimbingUserInput;
   const climbingId = nanoid();
@@ -16,7 +15,6 @@ export const addClimbingUser: MutationResolvers["addClimbingUser"] = async (
     climbingId,
     ...registerClimbingUserInput,
   };
-  console.log(registerClimbingUser);
 
   const meInfo = await User.findOne({
     userId: id,
@@ -45,50 +43,51 @@ export const addClimbingUser: MutationResolvers["addClimbingUser"] = async (
     }
   );
 
-  if (checkClimbingTime)
+  if (checkClimbingTime) {
     return {
       status: MutateStatus.Warning,
       message: "同じ時間帯に登録されているジムがあります！",
       gym: null,
     };
-
-  const updateGym = await Gym.findOneAndUpdate(
-    {
-      gymId,
-    },
-    {
-      $push: {
-        climbingUser: registerClimbingUser,
+  } else {
+    const updateGym = await Gym.findOneAndUpdate(
+      {
+        gymId,
       },
-    },
-    {
-      new: true,
-    }
-  );
-
-  await User.findOneAndUpdate(
-    {
-      userId: id,
-    },
-    {
-      $push: {
-        climbingTime: {
-          gymId,
-          climbingId,
-          name,
-          startClimbingTime,
-          finishClimbingTime,
+      {
+        $push: {
+          climbingUser: registerClimbingUser,
         },
       },
-    },
-    {
-      new: true,
-    }
-  );
+      {
+        new: true,
+      }
+    );
 
-  return {
-    status: MutateStatus.Success,
-    message: "登る予定を追加しました！",
-    gym: updateGym,
-  };
+    await User.findOneAndUpdate(
+      {
+        userId: id,
+      },
+      {
+        $push: {
+          climbingTime: {
+            gymId,
+            climbingId,
+            name,
+            startClimbingTime,
+            finishClimbingTime,
+          },
+        },
+      },
+      {
+        new: true,
+      }
+    );
+
+    return {
+      status: MutateStatus.Success,
+      message: "登る予定を追加しました！",
+      gym: updateGym,
+    };
+  }
 };

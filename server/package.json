@@ -3,9 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
-  
   "scripts": {
-    "start": "node server.ts",
+    "start": "nodemon server.ts",
     "generate": "graphql-codegen --config codegen.yml"
   },
   "dependencies": {

@@ -56,6 +56,7 @@ const HereDetailScreen = () => {
     format(nowDateTime, "HH:mm")
   );
   const [climbingId, setClimbingId] = useState<string>();
+  const [isEdit, setIsEdit] = useState(false);
 
   const { register, handleSubmit } = useForm<RegisterClimbingUserInput>();
 
@@ -110,7 +111,7 @@ const HereDetailScreen = () => {
   const onSubmit: SubmitHandler<RegisterClimbingUserInput> = async (data) => {
     const { startClimbingTime, finishClimbingTime } = data;
 
-    if (findMe) {
+    if (findMe && isEdit) {
       const response = await editClimbingUserMutation({
         variables: {
           input: {
@@ -231,6 +232,7 @@ const HereDetailScreen = () => {
                 title: "この予定を編集する",
                 onClick: () => {
                   setClimbingId(climbingId);
+                  setIsEdit(true);
                   onOpen();
                 },
               },
@@ -295,7 +297,13 @@ const HereDetailScreen = () => {
         bg={"white"}
       >
         <Center h="100%">
-          <Button colorScheme="blue" onClick={onOpen}>
+          <Button
+            colorScheme="blue"
+            onClick={() => {
+              setIsEdit(false);
+              onOpen();
+            }}
+          >
             登る予定を追加する
           </Button>
         </Center>

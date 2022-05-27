@@ -4,7 +4,7 @@ import User from "../../models/user";
 
 export const resetClimbingUser: MutationResolvers["resetClimbingUser"] =
   async () => {
-    const res = await User.updateMany(
+    await User.updateMany(
       {},
       {
         $set: {
@@ -13,7 +13,7 @@ export const resetClimbingUser: MutationResolvers["resetClimbingUser"] =
       },
       { multi: true }
     );
-    const gym = await Gym.updateMany(
+    await Gym.updateMany(
       {},
       {
         $set: {
