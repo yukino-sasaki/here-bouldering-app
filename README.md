@@ -4,7 +4,10 @@
 Bouldering is my hobby. Bouldering has a culture that not only climbs, but also enjoys communicating with the people there. Some people even come to the gym to talk to people. In fact, in my LINE group, there are frequent conversations such as "Are there any people climbing today?" And "Would you like to climb someone this day?" Therefore, I think it would be nice if there is a service in the gym that shows who is climbing, so I am making it. That is "Here! Bouldering!".
  
 ## DEMO
-  [画面収録 2022-05-31 19.45.23.zip](https://github.com/yukino-sasaki/here-bouldering-app/files/8804443/2022-05-31.19.45.23.zip)
+
+
+https://user-images.githubusercontent.com/70258644/171159787-028b4c7e-25e0-4a17-bc8f-d23b9abecdd3.mov
+
 
 demo url: https://main--here-bouldering-client.netlify.app/
  
@@ -19,7 +22,6 @@ demo url: https://main--here-bouldering-client.netlify.app/
 This app is used React, TypeScript, Node.js, MongoDB, Firebase, Apollo.
 # Usage
  
-DEMOの実行方法など、"hoge"の基本的な使い方を説明する
  
 ```bash
 git clone https://github.com/hoge/~
@@ -32,7 +34,7 @@ yarn start
  
 # Note
  
-
+I am currently stopping the production of this app. I thought the app was more practical than the web. I apologize for any inconvenience.
 
 
 # Author
