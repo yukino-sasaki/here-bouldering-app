@@ -68,9 +68,9 @@ function App() {
       <ChakraProvider theme={theme}>
         <BrowserRouter>
           <Routes>
+            <Route path="/logIn" element={<LogInScreen />} />
             <Route path="/" element={<HomeScreen />} />
             <Route path="/signIn" element={<SignInScreen />} />
-            <Route path="/logIn" element={<LogInScreen />} />
             <Route path="/detail" element={<HereDetailScreen />} />
             <Route path="/user" element={<UserScreen />} />
             <Route path="/gymsList" element={<GymsListScreen />} />

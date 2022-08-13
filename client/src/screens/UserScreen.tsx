@@ -7,6 +7,7 @@ import {
   Icon,
   Input,
   Text,
+  useToast,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -19,28 +20,9 @@ type UserFormValue = {
   nickname: string;
 };
 
-// function LeftArrow() {
-//   const { isFirstItemVisible, scrollPrev } = useContext(VisibilityContext);
-
-//   return (
-//     <Button disabled={isFirstItemVisible} onClick={() => scrollPrev()}>
-//       <FaChevronLeft />
-//     </Button>
-//   );
-// }
-
-// function RightArrow() {
-//   const { isLastItemVisible, scrollNext } = useContext(VisibilityContext);
-
-//   return (
-//     <Button disabled={isLastItemVisible} onClick={() => scrollNext()}>
-//       <FaChevronRight />
-//     </Button>
-//   );
-// }
-
 const UserScreen = () => {
   const navigate = useNavigate();
+  const toast = useToast();
   const [selectAvatarImage, setSelectAvatarImage] = useState<
     string | undefined
   >();
@@ -58,16 +40,22 @@ const UserScreen = () => {
 
     try {
       if (!selectAvatarImage) {
-        throw new Error("アイコンを選択してください");
-      }
-      await createUserMutation({
-        variables: {
-          nickname,
-          avatarImage: selectAvatarImage,
-        },
-      });
+        toast({
+          title: "アイコンを選択してください",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        });
+      } else {
+        await createUserMutation({
+          variables: {
+            nickname,
+            avatarImage: selectAvatarImage,
+          },
+        });
 
-      navigate("/");
+        navigate("/");
+      }
     } catch (error) {
       throw error;
     }
