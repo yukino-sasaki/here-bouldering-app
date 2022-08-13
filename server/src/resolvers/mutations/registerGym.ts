@@ -13,7 +13,6 @@ export const registerGym: MutationResolvers["registerGym"] = async (
       me: null,
       status: MutateStatus.Error,
     };
-  console.log(GymInput);
 
   const findSameGym = existRegisterGyms.find(
     (gym) => gym?.gymId === GymInput.gymId

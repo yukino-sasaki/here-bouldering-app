@@ -15,6 +15,7 @@ import {
   Icon,
   Input,
   Spacer,
+  Spinner,
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
@@ -26,6 +27,7 @@ import { Menu } from "../components/Menu";
 import { Modal } from "../components/Modal";
 import useFirebase from "../firebase/useFirebase";
 import {
+  GymDocument,
   MeDocument,
   useAddGymsMutation,
   useEditMeMutation,
@@ -58,7 +60,15 @@ const HomeScreen = () => {
   const userSetting = useDisclosure();
   const drawer = useDisclosure();
 
-  if (loading || error || !me)
+  if (loading) {
+    <Box pt="5" w="100%">
+      <Text fontFamily={"bold"} align="center">
+        しばらくお待ちください
+      </Text>
+      <Spinner size="xl" mx="auto" />
+    </Box>;
+  }
+  if (error || !me)
     return (
       <Box p="5" maxW={"60%"} mx="auto">
         <Text mb="6">
@@ -102,7 +112,7 @@ const HomeScreen = () => {
         variables: {
           input: { nickname, avatarImage },
         },
-        refetchQueries: [MeDocument],
+        refetchQueries: [MeDocument, GymDocument],
       });
 
       showToast(response.data?.editMe);

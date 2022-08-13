@@ -23,20 +23,48 @@ export const editMe: MutationResolvers["editMe"] = async (
     }
   );
 
-  await Gym.updateMany(
+  const findgym = await Gym.find({
+    $or: [
+      {
+        "creater.userId": id,
+      },
+      {
+        climbingUser: {
+          $elemMatch: {
+            userId: id,
+          },
+        },
+      },
+    ],
+  });
+  console.log("test", findgym);
+
+  const editGym = await Gym.updateMany(
     {
-      "creater.userId": id,
+      $or: [
+        {
+          "creater.userId": id,
+        },
+        {
+          climbingUser: {
+            $elemMatch: {
+              userId: id,
+            },
+          },
+        },
+      ],
     },
     {
       $set: {
         "creater.nickname": nickname,
-        "creater.avatarImage": avatarImage,
+        "climbingUser.$[].nickname": nickname,
       },
     },
     {
       new: true,
     }
   );
+  console.log("edit", editGym);
 
   return {
     me: updateMe,

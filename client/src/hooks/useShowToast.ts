@@ -8,12 +8,9 @@ type MutationResponse = {
 
 export const useShowToast = () => {
   const toast = useToast();
-  function showToast<T extends MutationResponse>(
-    response?: T | null,
-    title?: string
-  ) {
+  function showToast<T extends MutationResponse>(response?: T | null) {
     toast({
-      title: title ? title : response?.message,
+      title: response?.message,
       status: response?.status,
       duration: 5000,
       isClosable: true,

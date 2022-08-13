@@ -16,6 +16,7 @@ import {
   ModalOverlay,
   ResponsiveValue,
   Spacer,
+  Spinner,
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
@@ -186,6 +187,16 @@ const HereDetailScreen = () => {
       return { color: "purple", message: "帰宅" };
     } else return null;
   };
+
+  if (meQuery.loading)
+    return (
+      <Box pt="5" w="100%">
+        <Text fontFamily={"bold"} align="center">
+          しばらくお待ちください
+        </Text>
+        <Spinner size="xl" mx="auto" />
+      </Box>
+    );
 
   return (
     <Box mx="auto" p="5">
