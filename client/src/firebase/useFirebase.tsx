@@ -2,15 +2,17 @@ import { useToast } from "@chakra-ui/react";
 import { FirebaseError } from "firebase/app";
 import {
   createUserWithEmailAndPassword,
+  GoogleAuthProvider,
   signInWithEmailAndPassword,
+  signInWithPopup,
   signOut,
 } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { auth } from "./firebase";
 
 const useFirebase = () => {
+  const provider = new GoogleAuthProvider();
   const navigate = useNavigate();
-
   const toast = useToast();
 
   const registerUser = async (
@@ -113,12 +115,67 @@ const useFirebase = () => {
     }
   };
 
+  // google authrication
+  const registerWithGoogle = async () => {
+    await signInWithPopup(auth, provider)
+      .then((result) => {
+        // This gives you a Google Access Token. You can use it to access the Google API.
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        const token = credential?.accessToken;
+        // The signed-in user info.
+        const user = result.user;
+        const { email, uid } = user;
+        navigate("/user", { state: { user: { email, uid } } });
+        console.log({ credential, token, user });
+        // ...
+      })
+      .catch((error) => {
+        console.log(error);
+        // Handle Errors here.
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // The email of the user's account used.
+        const email = error.customData.email;
+        // The AuthCredential type that was used.
+        const credential = GoogleAuthProvider.credentialFromError(error);
+        // ...
+      });
+  };
+
+  const loginWithGoogle = async () => {
+    console.log("login with google");
+    await signInWithPopup(auth, provider)
+      .then((result) => {
+        // This gives you a Google Access Token. You can use it to access the Google API.
+        console.log("result", result);
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        console.log(credential);
+
+        // The signed-in user info.
+        navigate("/");
+        // navigate("/", { state: userResponse });
+      })
+      .catch((error) => {
+        console.log(error.message);
+        // Handle Errors here.
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // The email of the user's account used.
+        const email = error.customData.email;
+        // The AuthCredential type that was used.
+        const credential = GoogleAuthProvider.credentialFromError(error);
+        // ...
+      });
+  };
+
   const logout = async () => {
     await signOut(auth);
   };
   return {
     auth,
     registerUser,
+    registerWithGoogle,
+    loginWithGoogle,
     login,
     logout,
   };

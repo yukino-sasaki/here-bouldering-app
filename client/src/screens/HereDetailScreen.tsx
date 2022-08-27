@@ -59,7 +59,11 @@ const HereDetailScreen = () => {
   const [climbingId, setClimbingId] = useState<string>();
   const [isEdit, setIsEdit] = useState(false);
 
-  const { register, handleSubmit } = useForm<RegisterClimbingUserInput>();
+  const {
+    register,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = useForm<RegisterClimbingUserInput>();
 
   const { onOpen, onClose, isOpen } = useDisclosure();
 
@@ -111,38 +115,41 @@ const HereDetailScreen = () => {
 
   const onSubmit: SubmitHandler<RegisterClimbingUserInput> = async (data) => {
     const { startClimbingTime, finishClimbingTime } = data;
-
-    if (findMe && isEdit) {
-      const response = await editClimbingUserMutation({
-        variables: {
-          input: {
-            gymId,
-            climbingId,
-            startClimbingTime: climbingTimeInput(startClimbingTime),
-            finishClimbingTime: climbingTimeInput(finishClimbingTime),
+    try {
+      if (findMe && isEdit) {
+        const response = await editClimbingUserMutation({
+          variables: {
+            input: {
+              gymId,
+              climbingId,
+              startClimbingTime: climbingTimeInput(startClimbingTime),
+              finishClimbingTime: climbingTimeInput(finishClimbingTime),
+            },
           },
-        },
-        refetchQueries: [GymDocument],
-      });
-      showToast(response.data?.editClimbingUser);
-    } else {
-      const response = await addClimbingUserMutation({
-        variables: {
-          input: {
-            gymId,
-            name,
-            startClimbingTime: climbingTimeInput(startClimbingTime),
-            finishClimbingTime: climbingTimeInput(finishClimbingTime),
-            nickname: me.nickname,
-            avatarImage: me.avatarImage,
-            userId: me.userId,
+          refetchQueries: [GymDocument],
+        });
+        showToast(response.data?.editClimbingUser);
+      } else {
+        const response = await addClimbingUserMutation({
+          variables: {
+            input: {
+              gymId,
+              name,
+              startClimbingTime: climbingTimeInput(startClimbingTime),
+              finishClimbingTime: climbingTimeInput(finishClimbingTime),
+              nickname: me.nickname,
+              avatarImage: me.avatarImage,
+              userId: me.userId,
+            },
           },
-        },
-        refetchQueries: [GymDocument],
-      });
-
-      showToast(response.data?.addClimbingUser);
+          refetchQueries: [GymDocument],
+        });
+        showToast(response.data?.addClimbingUser);
+      }
+    } catch (error) {
+      console.log(error);
     }
+    onClose();
   };
 
   const onClickRemoveGym = async () => {
@@ -364,7 +371,7 @@ const HereDetailScreen = () => {
               )}
             </ModalBody>
             <ModalFooter>
-              <Button colorScheme="blue" type="submit">
+              <Button colorScheme="blue" type="submit" isLoading={isSubmitting}>
                 この時間帯に登る！
               </Button>
             </ModalFooter>

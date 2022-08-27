@@ -1,5 +1,6 @@
-import { Box, Button, Text } from "@chakra-ui/react";
+import { Box, Button, Icon, Text } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
+import { FcGoogle } from "react-icons/fc";
 import { RegisterBlock } from "../components/RegisterBlock";
 import useFirebase from "../firebase/useFirebase";
 
@@ -9,7 +10,7 @@ type FormData = {
 };
 
 const SignInScreen = () => {
-  const { registerUser } = useFirebase();
+  const { registerUser, registerWithGoogle } = useFirebase();
 
   const {
     handleSubmit,
@@ -40,6 +41,13 @@ const SignInScreen = () => {
           サインアップ
         </Button>
       </form>
+      <Text my={"5"}>または</Text>
+      <Button
+        leftIcon={<Icon as={FcGoogle} />}
+        onClick={() => registerWithGoogle()}
+      >
+        Googleでサインアップ
+      </Button>
     </Box>
   );
 };

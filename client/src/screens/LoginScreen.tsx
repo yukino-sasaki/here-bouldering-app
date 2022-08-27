@@ -1,5 +1,6 @@
-import { Box, Button, Text } from "@chakra-ui/react";
+import { Box, Button, Icon, Text } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
+import { FcGoogle } from "react-icons/fc";
 import { useNavigate } from "react-router-dom";
 import { RegisterBlock } from "../components/RegisterBlock";
 import useFirebase from "../firebase/useFirebase";
@@ -10,7 +11,7 @@ type FormData = {
 };
 
 const LogInScreen = () => {
-  const { login, auth } = useFirebase();
+  const { login, loginWithGoogle, auth } = useFirebase();
   const navigate = useNavigate();
   const {
     handleSubmit,
@@ -25,8 +26,6 @@ const LogInScreen = () => {
       await auth.currentUser.reload();
       navigate("/");
     }
-
-    // await meQuery.refetch();
   };
   return (
     <Box maxW={"60%"} mx="auto">
@@ -46,6 +45,10 @@ const LogInScreen = () => {
           ログインする
         </Button>
       </form>
+      <Text>または</Text>
+      <Button leftIcon={<Icon as={FcGoogle} />} onClick={loginWithGoogle}>
+        Googleでログインする
+      </Button>
     </Box>
   );
 };
