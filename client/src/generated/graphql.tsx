@@ -304,6 +304,11 @@ export type RemoveGymMutationVariables = Exact<{
 
 export type RemoveGymMutation = { __typename?: 'Mutation', removeGym?: { __typename?: 'RemoveGymResponse', status: MutateStatus, message?: string | null } | null };
 
+export type ResetClimbingUserMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ResetClimbingUserMutation = { __typename?: 'Mutation', resetClimbingUser?: { __typename?: 'ResetClimbingUserResponse', status: MutateStatus, message?: string | null } | null };
+
 export type UnregisterGymMutationVariables = Exact<{
   gymId: Scalars['ID'];
 }>;
@@ -653,6 +658,39 @@ export function useRemoveGymMutation(baseOptions?: Apollo.MutationHookOptions<Re
 export type RemoveGymMutationHookResult = ReturnType<typeof useRemoveGymMutation>;
 export type RemoveGymMutationResult = Apollo.MutationResult<RemoveGymMutation>;
 export type RemoveGymMutationOptions = Apollo.BaseMutationOptions<RemoveGymMutation, RemoveGymMutationVariables>;
+export const ResetClimbingUserDocument = gql`
+    mutation ResetClimbingUser {
+  resetClimbingUser {
+    status
+    message
+  }
+}
+    `;
+export type ResetClimbingUserMutationFn = Apollo.MutationFunction<ResetClimbingUserMutation, ResetClimbingUserMutationVariables>;
+
+/**
+ * __useResetClimbingUserMutation__
+ *
+ * To run a mutation, you first call `useResetClimbingUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useResetClimbingUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [resetClimbingUserMutation, { data, loading, error }] = useResetClimbingUserMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useResetClimbingUserMutation(baseOptions?: Apollo.MutationHookOptions<ResetClimbingUserMutation, ResetClimbingUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ResetClimbingUserMutation, ResetClimbingUserMutationVariables>(ResetClimbingUserDocument, options);
+      }
+export type ResetClimbingUserMutationHookResult = ReturnType<typeof useResetClimbingUserMutation>;
+export type ResetClimbingUserMutationResult = Apollo.MutationResult<ResetClimbingUserMutation>;
+export type ResetClimbingUserMutationOptions = Apollo.BaseMutationOptions<ResetClimbingUserMutation, ResetClimbingUserMutationVariables>;
 export const UnregisterGymDocument = gql`
     mutation UnregisterGym($gymId: ID!) {
   unregisterGym(gymId: $gymId) {

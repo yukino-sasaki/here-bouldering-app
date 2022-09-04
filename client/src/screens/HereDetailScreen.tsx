@@ -22,7 +22,7 @@ import {
 } from "@chakra-ui/react";
 import { Union } from "@chakra-ui/styled-system/dist/declarations/src/utils";
 import { format } from "date-fns";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { FaTrashAlt } from "react-icons/fa";
 import { useLocation } from "react-router-dom";
@@ -40,6 +40,7 @@ import {
   useMeQuery,
   useRemoveClimbingUserMutation,
   useRemoveGymMutation,
+  useResetClimbingUserMutation,
 } from "../generated/graphql";
 import { useShowToast } from "../hooks/useShowToast";
 
@@ -67,10 +68,22 @@ const HereDetailScreen = () => {
   const [editClimbingUserMutation] = useEditClimbingUserMutation();
   const [addClimbingUserMutation] = useAddClimbingUserMutation();
   const [removeClimbingUserMutation] = useRemoveClimbingUserMutation();
+  const [resetClimbingUserMutation] = useResetClimbingUserMutation();
   const meQuery = useMeQuery();
   const GymQueryResponse = useGymQuery({ variables: { gymId } });
   const gym = GymQueryResponse.data?.gym;
   const me = meQuery.data?.me;
+
+  // 前日の予定を削除
+  useEffect(() => {
+    const removeSchedule = async () => {
+      console.log("use effect executed");
+      await resetClimbingUserMutation({
+        refetchQueries: [GymDocument],
+      });
+    };
+    removeSchedule();
+  }, [resetClimbingUserMutation]);
 
   if (!me) return <></>;
   if (!gym)

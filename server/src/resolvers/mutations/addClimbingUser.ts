@@ -76,6 +76,7 @@ export const addClimbingUser: MutationResolvers["addClimbingUser"] = async (
             name,
             startClimbingTime,
             finishClimbingTime,
+            registeredTime: new Date().toISOString(),
           },
         },
       },

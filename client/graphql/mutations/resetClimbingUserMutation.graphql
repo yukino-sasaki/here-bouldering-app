@@ -1,0 +1,6 @@
+mutation ResetClimbingUser {
+  resetClimbingUser {
+    status
+    message
+  }
+}
